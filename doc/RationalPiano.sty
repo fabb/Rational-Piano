@@ -1,0 +1,163 @@
+% Fabian Ehrentraud, 2010-07-28
+% Licensed under the Open Software License (OSL 3.0)
+
+\usepackage{fancyhdr}
+%\usepackage{german}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{color}
+\usepackage[T1]{fontenc}
+%\usepackage[latin1]{inputenc}
+\usepackage[utf8]{inputenc}
+\usepackage{times}
+\usepackage{epsfig}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{longtable,colortbl}
+\usepackage[plainpages=false, pdfpagelabels]{hyperref}
+\hypersetup{%
+  colorlinks=true,
+  citecolor=black,
+  linkcolor=black,
+  %bookmarks=true,
+  bookmarksnumbered=true,
+  pdfauthor={Fabian Ehrentraud},
+  pdfcreator={},
+  pdfkeywords={Rational Piano, Consonance, Dissonance, Ratios, Music, Piano, Interface, Multitouch, MIDI, OSC},
+  urlcolor=black,
+  plainpages=false,
+  breaklinks=true,
+  pdftitle={Rational Piano}
+}
+
+%source code format
+\lstset{ %
+%language=java,                % choose the language of the code
+extendedchars=true,
+%basicstyle=\footnotesize,       % the size of the fonts that are used for the code
+basicstyle=\scriptsize,
+numbers=left,                   % where to put the line-numbers
+numberstyle=\footnotesize,      % the size of the fonts that are used for the line-numbers
+%stepnumber=1,                   % the step between two line-numbers. If it's 1 each line will be numbered
+stepnumber=3,                   % the step between two line-numbers. If it's 1 each line will be numbered
+firstnumber=auto,
+numberfirstline=true,
+numbersep=5pt,                  % how far the line-numbers are from the code
+%backgroundcolor=\color{white},  % choose the background color. You must add \usepackage{color}
+backgroundcolor=\color[gray]{.9},
+showspaces=false,               % show spaces adding particular underscores
+showstringspaces=false,         % underline spaces within strings
+showtabs=false,                 % show tabs within strings adding particular underscores
+%frame=single,	                % adds a frame around the code
+frame={tb},
+tabsize=2,	                % sets default tabsize to 2 spaces
+caption=\lstname,
+%captionpos=b,                   % sets the caption-position to bottom
+captionpos=t,                   % sets the caption-position to top
+breaklines=true,                % sets automatic line breaking
+breakatwhitespace=false,        % sets if automatic breaks should only happen at whitespace
+escapeinside={\%*}{*)},         % if you want to add a comment within your code
+prebreak={\space\hbox{\ensuremath\hookleftarrow}}
+}
+
+%%%%%%%
+
+\oddsidemargin 1cm
+\evensidemargin 1cm
+\topmargin 0pt
+\headsep 50pt
+\textheight 21.5cm
+\textwidth 14.1cm
+
+\renewcommand{\floatpagefraction}{0.9}
+\renewcommand{\textfraction}{0.05}
+\renewcommand{\topfraction}{1.0}
+\renewcommand{\bottomfraction}{1.0}
+
+\setcounter{totalnumber}{3}
+\setcounter{bottomnumber}{3}
+\setcounter{topnumber}{3}
+
+\setlength{\unitlength}{1mm}
+\setlength{\parindent}{6mm}
+\setlength{\parskip}{12pt plus2pt minus2pt}
+
+\sloppy
+
+\setcounter{footnote}{0} 
+
+
+%titlepage
+
+\def\maketitle{
+\begin{titlepage}
+
+% enlarge page
+\setlength{\topmargin}{0pt}
+\setlength{\headheight}{0pt}
+\setlength{\headsep}{0pt}
+\setlength{\footskip}{0pt}
+
+\let\footnotesize\small \let\footnoterule\relax \setcounter{page}{0}
+\null
+\vfill
+\large
+\vskip -4 cm 
+
+\begin{center}
+% heading
+{\LARGE\bf Practical Training Project \par} Technical University of Vienna \vskip 2cm
+
+\vskip 1cm
+
+% title
+{\Huge\bf Rational Piano \par} 
+\vskip 5cm
+
+\begin{flushright}
+% authors
+Fabian \ Ehrentraud \par student ID 0725639, study code 535 \par
+{\small e0725639@student.tuwien.ac.at \par}
+
+\vskip 1cm
+Vienna, \writedate
+\end{flushright}
+\end{center} \par
+\vskip 1.5cm 
+
+\end{titlepage}
+
+\setcounter{footnote}{0} 
+\let\thanks\relax
+} % \def\maketitle
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newenvironment{Ventry}[1]%
+{\begin{list}{}{\renewcommand{\makelabel}[1]{\textbf{##1:}\hfill}%
+\settowidth{\labelwidth}{\textbf{#1:}}%
+\setlength{\leftmargin}{\labelwidth}%
+\addtolength{\leftmargin}{\labelsep}}}%
+{\end{list}}
+
+\newcommand{\tablesize}{\fontsize{8}{10}\selectfont}
+
+
+% layout of non-title pages
+
+\pagenumbering{roman}
+%%\setlength{\parskip}{5pt plus2pt minus2pt}
+
+\setlength{\parskip}{1mm}
+\clearpage
+\setlength{\parskip}{5pt plus2pt minus2pt}
+
+\pagestyle{fancy}
+%\renewcommand{\chaptermark}[1]{\markboth{\thechapter\ #1}{}}
+\renewcommand{\sectionmark}[1]{\markboth{\thesection\ #1}{}}
+%\addtolength{\headheight}{2pt}
+\setlength{\headheight}{14.5pt}
+
+\pagenumbering{arabic}
+\setcounter{page} {1}

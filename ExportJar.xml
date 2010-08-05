@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project default="create_run_jar" name="Create Runnable Jar for Project RationalMusic">
+    <!--this file was created by Eclipse Runnable JAR Export Wizard-->
+    <!--ANT 1.7 is required                                        -->
+    <target name="create_run_jar">
+        <jar destfile="RationalPiano.jar" filesetmanifest="mergewithoutmain">
+            <manifest>
+                <attribute name="Main-Class" value="RationalPiano.Run.RationalPiano"/>
+                <attribute name="Class-Path" value="."/>
+            </manifest>
+            <fileset dir="bin"/>
+            <zipfileset excludes="META-INF/*.SF" src="lib/javaosc.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="lib/synOscP5.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="lib/rwmidi.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="lib/core.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="lib/libTUIO.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="lib/TUIO.jar"/>
+        </jar>
+    </target>
+</project>
