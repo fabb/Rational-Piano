@@ -1,0 +1,15 @@
+Welcome to the _*Rational Piano*_!
+
+The *license* can be found in the file "LICENSE.txt":http://github.com/fabb/Rational-Piano/raw/master/LICENSE.txt.
+
+The *documentation* can be found at "doc/RationalPiano.pdf":http://github.com/fabb/Rational-Piano/raw/master/doc/RationalPiano.pdf.
+
+The *precompiled runtime* is called "RationalPiano.jar":http://github.com/fabb/Rational-Piano/raw/master/RationalPiano.jar.
+
+The *sourcecode* is located in the subfolder "src":http://github.com/fabb/Rational-Piano/tree/master/src/, necessary *libraries* are in the subfolder "lib":http://github.com/fabb/Rational-Piano/tree/master/lib/.
+
+The sourcecode is fully documented with *Javadoc*, a compiled version can be found at "doc/javadoc":http://github.com/fabb/Rational-Piano/tree/master/doc/javadoc/.
+
+There are *ANT scripts* to compile the runtime to a JAR file ("ExportJar.xml":http://github.com/fabb/Rational-Piano/blob/master/ExportJar.xml) and to build the Javadoc documentation ("GenerateJavadoc.xml":http://github.com/fabb/Rational-Piano/blob/master/GenerateJavadoc.xml).
+
+For more information, see the documentation.
