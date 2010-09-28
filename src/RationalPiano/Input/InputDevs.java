@@ -11,8 +11,8 @@ import RationalPiano.VoiceManagement.Voices;
  * Translates presses to newVoice() and releases to releaseVoice().
  * 
  * @author Fabian Ehrentraud
- * @date 2010-07-26
- * @version 1.0
+ * @date 2010-09-24
+ * @version 1.01
  * @licence Licensed under the Open Software License (OSL 3.0)
  */
 public class InputDevs {
@@ -21,6 +21,7 @@ public class InputDevs {
 	private Voices voices;
 	private GraphicControls graphiccontrols;
 	private TuioInput tuioinput;
+	private InputMidi midiinput;
 	
 	private int lastMouseNote;
 	
@@ -38,6 +39,9 @@ public class InputDevs {
 		this.voices = voices;
 		this.graphiccontrols = graphiccontrols;
 		this.tuioinput = new TuioInput(papplet, voices, graphiccontrols, tuioPort);
+		
+		//TODO
+		this.midiinput = new InputMidi(papplet, voices, "EDIROL PCR 1");
 	}
 
 	/**

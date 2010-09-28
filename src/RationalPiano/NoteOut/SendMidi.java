@@ -11,8 +11,8 @@ import rwmidi.RWMidi;
  * Allows to turn on/off notes on a midi channel
  * 
  * @author Fabian Ehrentraud
- * @date 2010-07-26
- * @version 1.0
+ * @date 2010-09-23
+ * @version 1.01
  * @licence Licensed under the Open Software License (OSL 3.0)
  */
 public class SendMidi {
@@ -38,7 +38,7 @@ public class SendMidi {
 		
 		String devices[] = RWMidi.getOutputDeviceNames();
 		
-		logger.config("Available MIDI Devices:");
+		logger.config("Available MIDI Output Devices:");
 		for(String device : devices){
 			logger.config("    " + device);
 		}
@@ -46,7 +46,7 @@ public class SendMidi {
 		
 		int i;
 		for(i=0; i<devices.length; i++){
-			if(devices[i].contains(midiDevice)){
+			if(devices[i].toLowerCase().contains(midiDevice.toLowerCase())){
 				logger.config("MIDI Device chosen: '" + devices[i] + "'");
 				break;
 			}

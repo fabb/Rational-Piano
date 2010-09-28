@@ -7,8 +7,8 @@ import processing.core.*;
  * Allows to turn on/off notes/voices on a midi channel / osc port
  * 
  * @author Fabian Ehrentraud
- * @date 2010-07-26
- * @version 1.0
+ * @date 2010-09-24
+ * @version 1.01
  * @licence Licensed under the Open Software License (OSL 3.0)
  */
 public class NoteOutput {
@@ -48,9 +48,9 @@ public class NoteOutput {
 	 * @param midiNoteNumber The MIDI note number to turn on
 	 * @param velocity Initial note velocity; 0<=velocity<=1
 	 */
-	public void noteOn(int midiNoteNumber, float velocity){
+	public void noteOn(int midiNoteNumber, double velocity){
 		if(oscOn == true){
-			sendosc.voiceOn(midiNoteNumber, velocity);
+			sendosc.voiceOn(midiNoteNumber, (float)velocity);
 		}
 		if(midiOn == true){
 			sendmidi.noteOn(midiNoteNumber, (int)(127*velocity));

@@ -14,8 +14,8 @@ import processing.core.PApplet;
  * Manages all active voices and provides functions to add/remove voices and to calculate the consonances of all keys in range which also sets the line widths
  * 
  * @author Fabian Ehrentraud
- * @date 2010-07-26
- * @version 1.0
+ * @date 2010-09-24
+ * @version 1.01
  * @licence Licensed under the Open Software License (OSL 3.0)
  */
 public class Voices {
@@ -91,7 +91,7 @@ public class Voices {
 			}
 		}
 		
-		noteoutput.noteOn(midiNoteNumber, 1);
+		noteoutput.noteOn(midiNoteNumber, velocity);
 		
 		graphiccontrols.setLineActive(midiNoteNumber, true);
 		

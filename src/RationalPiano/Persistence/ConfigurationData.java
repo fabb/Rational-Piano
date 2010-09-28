@@ -25,8 +25,8 @@ import RationalPiano.Persistence.Annotations.FieldIntegerMinMax;
  * Provides methods to read and write that configuration from/to a human readable text file.
  * 
  * @author Fabian Ehrentraud
- * @date 2010-07-26
- * @version 1.0
+ * @date 2010-09-24
+ * @version 1.01
  * @licence Licensed under the Open Software License (OSL 3.0)
  */
 public class ConfigurationData {
@@ -94,7 +94,7 @@ public class ConfigurationData {
 	
 	@FieldDescription(description="maximum dissonance to calculate a fraction for, higher values take more time to initialize")
 	@FieldIntegerMinMax(min=1, max=Integer.MAX_VALUE)
-	public Integer maxfrac = 157;
+	public Integer maxfrac = 16*16;
 	
 	@FieldDescription(description="width of the bell curve which gets drawn around each fraction when calculating dissonance")
 	@FieldDoubleMinMax(min=0.01, max=1)
