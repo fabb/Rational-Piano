@@ -3,23 +3,25 @@ package RationalPiano.Input;
 import java.util.concurrent.ConcurrentHashMap;
 
 import processing.core.PApplet;
-import RationalPiano.Graphic.GraphicControls;
-import RationalPiano.VoiceManagement.Voices;
+import RationalPiano.Graphic.IGraphicControlsPassive;
+import RationalPiano.NoteOut.INoteOutput;
+import RationalPiano.VoiceManagement.IVoices;
 
 /**
- * Manages Input from Mouse, Keyboard and Multitouch.
- * Translates presses to newVoice() and releases to releaseVoice().
+ * Manages Input from Mouse, Keyboard, MIDI and Multitouch XXX.
+ * Translates presses to newVoice() and noteOn() and releases to releaseVoice() and noteOff().
  * 
  * @author Fabian Ehrentraud
- * @date 2010-09-24
+ * @date 2010-10-10
  * @version 1.01
  * @licence Licensed under the Open Software License (OSL 3.0)
  */
-public class InputDevs {
+public class InputDevs implements IKeyInput, IMouseInput {
 	
 	private PApplet papplet;
-	private Voices voices;
-	private GraphicControls graphiccontrols;
+	private IVoices voices;
+	private INoteOutput noteoutput;
+	private IGraphicControlsPassive graphiccontrols;
 	private TuioInput tuioinput;
 	private InputMidi midiinput;
 	
@@ -31,25 +33,22 @@ public class InputDevs {
 	 * Initializes the input management and generates a TUIO UDP receiver
 	 * @param papplet The processing applet to get the size of for scaling TUIO input
 	 * @param voices A Voices object for creating new voices and removing old ones
-	 * @param graphiccontrols A GraphicControls object needed for getting the corresponding note at a given coordinate
+	 * @param noteoutput The NoteOutput object to send note on/off messages to.
+	 * @param graphiccontrols A IGraphicControlsPassive object needed for getting the corresponding note at a given coordinate
 	 * @param tuioPort The local UDP port the TUIO Listener should listen at
+	 * @param midiInputDevice Partial case-insensitive name of the wanted Midi Input Device
 	 */
-	public InputDevs(PApplet papplet, Voices voices, GraphicControls graphiccontrols, int tuioPort) {
+	public InputDevs(PApplet papplet, IVoices voices, INoteOutput noteoutput, IGraphicControlsPassive graphiccontrols, int tuioPort, String midiInputDevice) {
 		this.papplet = papplet;
 		this.voices = voices;
+		this.noteoutput = noteoutput;
 		this.graphiccontrols = graphiccontrols;
-		this.tuioinput = new TuioInput(papplet, voices, graphiccontrols, tuioPort);
-		
-		//TODO
-		this.midiinput = new InputMidi(papplet, voices, "EDIROL PCR 1");
+		this.tuioinput = new TuioInput(papplet, voices, noteoutput, graphiccontrols, tuioPort);
+		this.midiinput = new InputMidi(papplet, voices, noteoutput, midiInputDevice);
 	}
 
-	/**
-	 * Hook to be called when a mouse button has been pressed.
-	 * Creates a new voice that corresponds with the Line at the press coordinates.
-	 * @param mouseX The X-coordinate position in Pixels on the PApplet window where the mouse button has been pressed at. Leftmost pixel = 0.
-	 * @param mouseY The Y-coordinate position in Pixels on the PApplet window where the mouse button has been pressed at. Topmost pixel = 0.	 
-	 * @param mouseButton An integer representing the mouse button. 37 == left mouse button, 39 == right mouse button, 3 == middle mouse button
+	/* (non-Javadoc)
+	 * @see RationalPiano.Input.IMouseInput#mousePressed(int, int, int)
 	 */
 	public void mousePressed(int mouseX, int mouseY, int mouseButton) {
 		//PApplet.println(mouseButton); //debug
@@ -57,36 +56,31 @@ public class InputDevs {
 			return; //clicked another mouse button while one was still held down
 		}
 		
-		lastMouseNote = graphiccontrols.getLineNote(mouseX,mouseY);
+		lastMouseNote = graphiccontrols.getElementNote(mouseX,mouseY);
 		//lines.getLine(this.mouseX).volume((int)(Math.random()*255));
 		
 		if(lastMouseNote != -1){
+			noteoutput.noteOn(lastMouseNote, 1);
 			voices.newVoice(lastMouseNote, 1);
 		}
 	}
 
-	/**
-	 * Hook to be called when a mouse button has been released.
-	 * Releases the last via mouse click created voice.
-	 * @param mouseX The X-coordinate position in Pixels on the PApplet window where the mouse button has been released at. Leftmost pixel = 0.
-	 * @param mouseY The Y-coordinate position in Pixels on the PApplet window where the mouse button has been released at. Topmost pixel = 0.
-	 * @param mouseButton An integer representing the mouse button. 37 == left mouse button, 39 == right mouse button, 3 == middle mouse button
+	/* (non-Javadoc)
+	 * @see RationalPiano.Input.IMouseInput#mouseReleased(int, int, int)
 	 */
 	public void mouseReleased(int mouseX, int mouseY, int mouseButton) {
 		//note_last = graphiccontrols.getLineNote(mouseX,mouseY); //not necessary as the last key is released
 		
 		if(lastMouseNote != -1){
+			noteoutput.noteOff(lastMouseNote);
 			voices.releaseVoice(lastMouseNote);
 		}
 		
 		lastMouseNote = -1;
 	}
 
-	/**
-	 * Hook for a pressed key on the keyboard.
-	 * Only reacts to this key if its state was released before (to prevent the OS' setting of auto key repeat from taking negative effect).
-	 * Creates a new voice that corresponds to that key (see toNote()). 
-	 * @param key The keyboard key's corresponding ASCII character, dependent of the OS' input locale settings.
+	/* (non-Javadoc)
+	 * @see RationalPiano.Input.IKeyInput#keyPressed(char)
 	 */
 	public void keyPressed(char key) {
 		if(activeKeys.containsKey((int)key)){
@@ -102,14 +96,13 @@ public class InputDevs {
 		int note = toNote(key);
 		
 		if(note != -1){
+			noteoutput.noteOn(note, 1);
 			voices.newVoice(note, 1);
 		}
 	}
 
-	/**
-	 * Hook for a released key on the keyboard.
-	 * Releases the voice that corresponds to that key (see toNote()).
-	 * @param key The keyboard key's corresponding ASCII character, dependent of the OS' input locale settings.
+	/* (non-Javadoc)
+	 * @see RationalPiano.Input.IKeyInput#keyReleased(char)
 	 */
 	public void keyReleased(char key) {
 		if(activeKeys.containsKey((int)key)){
@@ -124,6 +117,7 @@ public class InputDevs {
 		int note = toNote(key);
 		
 		if(note != -1){
+			noteoutput.noteOff(note);
 			voices.releaseVoice(note);
 		}
 	}
@@ -137,73 +131,73 @@ public class InputDevs {
 	private int toNote(char key){
 		switch(key){
 		case 'y': 
-			return graphiccontrols.getFirstLineNote() + 0;
+			return graphiccontrols.getLowestNote() + 0;
 		case 'x': 
-			return graphiccontrols.getFirstLineNote() + 1;
+			return graphiccontrols.getLowestNote() + 1;
 		case 'c': 
-			return graphiccontrols.getFirstLineNote() + 2;
+			return graphiccontrols.getLowestNote() + 2;
 		case 'v': 
-			return graphiccontrols.getFirstLineNote() + 3;
+			return graphiccontrols.getLowestNote() + 3;
 		case 'b': 
-			return graphiccontrols.getFirstLineNote() + 4;
+			return graphiccontrols.getLowestNote() + 4;
 		case 'n': 
-			return graphiccontrols.getFirstLineNote() + 5;
+			return graphiccontrols.getLowestNote() + 5;
 		case 'm': 
-			return graphiccontrols.getFirstLineNote() + 6;
+			return graphiccontrols.getLowestNote() + 6;
 		case ',': 
-			return graphiccontrols.getFirstLineNote() + 7;
+			return graphiccontrols.getLowestNote() + 7;
 		case '.': 
-			return graphiccontrols.getFirstLineNote() + 8;
+			return graphiccontrols.getLowestNote() + 8;
 		case '-': 
-			return graphiccontrols.getFirstLineNote() + 9;
+			return graphiccontrols.getLowestNote() + 9;
 		case 'a': 
-			return graphiccontrols.getFirstLineNote() + 10;
+			return graphiccontrols.getLowestNote() + 10;
 		case 's': 
-			return graphiccontrols.getFirstLineNote() + 11;
+			return graphiccontrols.getLowestNote() + 11;
 		case 'd': 
-			return graphiccontrols.getFirstLineNote() + 12;
+			return graphiccontrols.getLowestNote() + 12;
 		case 'f': 
-			return graphiccontrols.getFirstLineNote() + 13;
+			return graphiccontrols.getLowestNote() + 13;
 		case 'g': 
-			return graphiccontrols.getFirstLineNote() + 14;
+			return graphiccontrols.getLowestNote() + 14;
 		case 'h': 
-			return graphiccontrols.getFirstLineNote() + 15;
+			return graphiccontrols.getLowestNote() + 15;
 		case 'j': 
-			return graphiccontrols.getFirstLineNote() + 16;
+			return graphiccontrols.getLowestNote() + 16;
 		case 'k': 
-			return graphiccontrols.getFirstLineNote() + 17;
+			return graphiccontrols.getLowestNote() + 17;
 		case 'l': 
-			return graphiccontrols.getFirstLineNote() + 18;
+			return graphiccontrols.getLowestNote() + 18;
 		case 'ö': 
-			return graphiccontrols.getFirstLineNote() + 19;
+			return graphiccontrols.getLowestNote() + 19;
 		case 'ä': 
-			return graphiccontrols.getFirstLineNote() + 20;
+			return graphiccontrols.getLowestNote() + 20;
 		case 'q': 
-			return graphiccontrols.getFirstLineNote() + 21;
+			return graphiccontrols.getLowestNote() + 21;
 		case 'w': 
-			return graphiccontrols.getFirstLineNote() + 22;
+			return graphiccontrols.getLowestNote() + 22;
 		case 'e': 
-			return graphiccontrols.getFirstLineNote() + 23;
+			return graphiccontrols.getLowestNote() + 23;
 		case 'r': 
-			return graphiccontrols.getFirstLineNote() + 24;
+			return graphiccontrols.getLowestNote() + 24;
 		case 't': 
-			return graphiccontrols.getFirstLineNote() + 25;
+			return graphiccontrols.getLowestNote() + 25;
 		case 'z': 
-			return graphiccontrols.getFirstLineNote() + 26;
+			return graphiccontrols.getLowestNote() + 26;
 		case 'u': 
-			return graphiccontrols.getFirstLineNote() + 27;
+			return graphiccontrols.getLowestNote() + 27;
 		case 'i': 
-			return graphiccontrols.getFirstLineNote() + 28;
+			return graphiccontrols.getLowestNote() + 28;
 		case 'o': 
-			return graphiccontrols.getFirstLineNote() + 29;
+			return graphiccontrols.getLowestNote() + 29;
 		case 'p': 
-			return graphiccontrols.getFirstLineNote() + 30;
+			return graphiccontrols.getLowestNote() + 30;
 		case 'ü': 
-			return graphiccontrols.getFirstLineNote() + 31;
+			return graphiccontrols.getLowestNote() + 31;
 		case '+': 
-			return graphiccontrols.getFirstLineNote() + 32;
+			return graphiccontrols.getLowestNote() + 32;
 		case '#': 
-			return graphiccontrols.getFirstLineNote() + 33;
+			return graphiccontrols.getLowestNote() + 33;
 		default:
 			return -1;
 		}

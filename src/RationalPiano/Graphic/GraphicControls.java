@@ -10,11 +10,11 @@ import processing.core.PConstants;
  * Provides methods to draw, change and question those objects
  * 
  * @author Fabian Ehrentraud
- * @date 2010-07-26
- * @version 1.0
+ * @date 2010-10-10
+ * @version 1.02
  * @licence Licensed under the Open Software License (OSL 3.0)
  */
-public class GraphicControls {
+public class GraphicControls implements IGraphicControls {
 	
 	private PApplet papplet;
 	//private PFont font;
@@ -23,7 +23,7 @@ public class GraphicControls {
 	private int backgroundColorSaturation;
 	private int backgroundColorBrightness;
 
-	private GraphicNoteLineArray graphiclines;
+	private IGraphicVisualizationElementArray graphiclines;
 	//private GraphicParameterControl graphicparametercontrols;
 	
 	private static final Logger logger = Logger.getLogger(GraphicControls.class.getName());
@@ -94,14 +94,13 @@ public class GraphicControls {
 
 		//font = papplet.createFont("SanSerif", 12); //FIXME this takes ages as the system's font folder is being scanned
 		
-		graphiclines = new GraphicNoteLineArray(papplet, notecount, notestart, 0, papplet.width, papplet.height/10, papplet.height-papplet.height/10, lineBend, lineColorHueInactive, lineColorHueActive, lineColorSaturation, lineColorBrightness);
+		graphiclines = new GraphicNoteLineArray(papplet, notecount, notestart, 0, papplet.width, 0, papplet.height, lineBend, lineColorHueInactive, lineColorHueActive, lineColorSaturation, lineColorBrightness);
 		
 		//TODO generate parameter controls for live-tweaking parameters
 	}
 
-	/**
-	 * Draws all contained visual elements and the background
-	 * @warning Changes papplet's color mode to HSB.
+	/* (non-Javadoc)
+	 * @see RationalPiano.Graphic.IGraphicControls#draw()
 	 */
 	public void draw() {
 		papplet.colorMode(PConstants.HSB); //be warned: this will change all color uses in the whole PApplet unless a colorMode() call precedes those
@@ -125,49 +124,42 @@ public class GraphicControls {
 		//TODO draw parameter controls
 	}
 
-	/**
-	 * Sets the visual strenghtness of the selected line. If there is no line corresponding to key, nothing happens.
-	 * @param key Chooses the Line which correspondends to this midi note number, 0<=key<=255
-	 * @param width Visual strenghtness to set the selected line to, 0<=width<=1
+	/* (non-Javadoc)
+	 * @see RationalPiano.Graphic.IGraphicControls#setElementWidth(int, double)
 	 */
-	public void setLineWidth(int key, double width) {
-		GraphicVerticalLine line = graphiclines.getLine(key);
+	public void setElementWidth(int key, double width) {
+		IGraphicVisualizationElement line = graphiclines.getElement(key);
 		if(line != null){
 			line.setVolume(width);
 		}
 	}
 	
-	/**
-	 * Gets the Midi note number corresponding to the line at the x coordinate at_x
-	 * @param at_x X-Coordinate to look for a line
-	 * @param at_y Y-Coordinate to look for a line
-	 * @return Midi note number corresponding to the found line
+	/* (non-Javadoc)
+	 * @see RationalPiano.Graphic.IGraphicControls#getElementNote(int, int)
 	 */
-	public int getLineNote(int at_x, int at_y){
-		return graphiclines.getLineNote(at_x, at_y);
+	public int getElementNote(int at_x, int at_y){
+		return graphiclines.getElementNote(at_x, at_y);
 	}
 	
-	/**
-	 * @return The midi note number of the first (leftmost) line
+	/* (non-Javadoc)
+	 * @see RationalPiano.Graphic.IGraphicControls#getLowestNote()
 	 */
-	public int getFirstLineNote(){
-		return graphiclines.getFirstLineNote();
+	public int getLowestNote(){
+		return graphiclines.getLowestNote();
 	}
 	
-	/**
-	 * @return The count of lines that are drawn on the screen.
+	/* (non-Javadoc)
+	 * @see RationalPiano.Graphic.IGraphicControls#getHighestNote()
 	 */
-	public int getLineCount(){
-		return graphiclines.getLineCount();
+	public int getHighestNote(){
+		return graphiclines.getHighestNote();
 	}
 
-	/**
-	 * Sets the specified line active or inactive. This allows to highlight the line according to whether its corresponding note is still held or released.
-	 * @param key The midi note which corresponds to a specific line.
-	 * @param active True to activate the line, false to deactivate it.
+	/* (non-Javadoc)
+	 * @see RationalPiano.Graphic.IGraphicControls#setElementActive(int, boolean)
 	 */
-	public void setLineActive(int key, boolean active) {
-		GraphicVerticalLine line = graphiclines.getLine(key);
+	public void setElementActive(int key, boolean active) {
+		IGraphicVisualizationElement line = graphiclines.getElement(key);
 		
 		if(line != null){
 			line.setActive(active);	

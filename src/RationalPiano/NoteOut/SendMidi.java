@@ -26,7 +26,7 @@ public class SendMidi {
 	/**
 	 * Opens the specified MIDI device.
 	 * @param papplet The processing applet to send the MIDI messages from.
-	 * @param midiDevice PART of the name of the MIDI device to send the note messages to.
+	 * @param midiOutputDevice PART of the name of the MIDI device to send the note messages to.
 	 * @param midiChannel MIDI channel to send the note messages to; 0<=midiChannel<=15
 	 */
 	public SendMidi(PApplet papplet, String midiDevice, int midiChannel) {
@@ -92,5 +92,13 @@ public class SendMidi {
 		if(midiNoteNumber>=0 && midiNoteNumber<=127){
 			output.sendNoteOff(channel, midiNoteNumber, 0);
 		}
+	}
+
+	/**
+	 * Sends a sustain message with the given sustain value.
+	 * @param sustain Sustain value to send; 0<=sustain<=127
+	 */
+	public void sustain(int sustain) {
+		output.sendController(channel, 64, sustain);
 	}
 }

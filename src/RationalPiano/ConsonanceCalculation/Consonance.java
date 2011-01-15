@@ -21,7 +21,7 @@ import java.util.logging.Logger;
  * @version 1.01
  * @licence Licensed under the Open Software License (OSL 3.0)
  */
-public class Consonance {
+public class Consonance implements IConsonance {
 	
 	private int notestart;
 	private int notecount;
@@ -54,11 +54,10 @@ public class Consonance {
 		initialize(notecount, maxfrac, bellWidth);
 	}
 	
-	/**
-	 * Gets the dissonances for all notes in range [notestart, notestart+notecount-1] for the given set of sounding notes with their according volumes.
-	 * @param voicesValues A map with the sounding notes; the Integer key value denotes the midi note number and the Double value denotes the according volume; all notes not in the map are assumed to have volume 0.
-	 * @return A map with consonance values between 0 and 1 for all notes in range [notestart, notestart+notecount-1].
+	/* (non-Javadoc)
+	 * @see RationalPiano.ConsonanceCalculation.IConsonance#calculate(java.util.HashMap)
 	 */
+	@Override
 	public HashMap<Integer, Double> calculate(HashMap<Integer,Double> voicesValues) {
 		//add up single dissonances and then invert 
 

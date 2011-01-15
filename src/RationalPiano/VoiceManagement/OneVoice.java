@@ -4,8 +4,8 @@ package RationalPiano.VoiceManagement;
  * Represents one active voice with one key and holds the holdtime and whether this voice was already released.
  * 
  * @author Fabian Ehrentraud
- * @date 2010-07-26
- * @version 1.0
+ * @date 2011-01-15
+ * @version 1.05
  * @licence Licensed under the Open Software License (OSL 3.0)
  */
 public class OneVoice {
@@ -35,6 +35,21 @@ public class OneVoice {
 		this.key = key;
 		this.initialVelocity = initialVelocity;
 		this.previousVolume = previousVolume;
+	}
+
+	/**
+	 * Retriggers an already active voice which resets all parameters, but starts at the current velocity.
+	 * @param velocity The velocity the new key has been struck with. Between 0 and 1. 
+	 * @param previousVolume The volume this voice had when it was retriggered.
+	 */
+	public void retrigger(double velocity, double previousVolume) {
+		this.previousVolume = previousVolume;
+		this.initialVelocity = velocity;
+		
+		holdtime = 0;
+		releasedtime = 0;
+
+		released = false;
 	}
 	
 	/**
@@ -95,5 +110,5 @@ public class OneVoice {
 	public boolean isReleased() {
 		return released;
 	}
-}
 
+}

@@ -4,8 +4,9 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 
 import processing.core.PApplet;
-import RationalPiano.Graphic.GraphicControls;
-import RationalPiano.VoiceManagement.Voices;
+import RationalPiano.Graphic.IGraphicControlsPassive;
+import RationalPiano.NoteOut.INoteOutput;
+import RationalPiano.VoiceManagement.IVoices;
 import TUIO.TuioClient;
 import TUIO.TuioCursor;
 import TUIO.TuioListener;
@@ -13,11 +14,11 @@ import TUIO.TuioObject;
 import TUIO.TuioTime;
 
 /**
- * Manages TUIO Multitouch input and de/activates the according voices
+ * Manages TUIO Multitouch input and de/activates the according voices and notes
  * 
  * @author Fabian Ehrentraud
- * @date 2010-07-26
- * @version 1.0
+ * @date 2010-10-10
+ * @version 1.02
  * @licence Licensed under the Open Software License (OSL 3.0)
  */
 public class TuioInput implements TuioListener {
@@ -28,8 +29,9 @@ public class TuioInput implements TuioListener {
 	private TuioClient tuioClient;
 	private int tuioPort;
 
-	private Voices voices;
-	private GraphicControls graphiccontrols;
+	private IVoices voices;
+	private INoteOutput noteoutput;
+	private IGraphicControlsPassive graphiccontrols;
 	
 	//key is sessionid and object is midi note number
 	private ConcurrentHashMap<Long, Integer> activeKeys = new ConcurrentHashMap<Long, Integer>();
@@ -41,14 +43,16 @@ public class TuioInput implements TuioListener {
 	 * Initializes the TUIO receiver.
 	 * @param papplet The processing applet to get the size of for scaling TUIO input
 	 * @param voices The Voices object to add/remove voices to/from.
-	 * @param graphiccontrols The GraphicControls object to ask for line positions.
+	 * @param noteoutput The NoteOutput object to send note on/off messages to.
+	 * @param graphiccontrols The IGraphicControlsPassive object to ask for line positions.
 	 * @param tuioPort The local UDP port the TUIO Listener should listen at
 	 */
-	public TuioInput(PApplet papplet, Voices voices, GraphicControls graphiccontrols, int tuioPort) {
+	public TuioInput(PApplet papplet, IVoices voices, INoteOutput noteoutput, IGraphicControlsPassive graphiccontrols, int tuioPort) {
 		logger.info("Setting up TUIO input");
 		this.papplet = papplet;
 		this.tuioPort = tuioPort;
 		this.voices = voices;
+		this.noteoutput = noteoutput;
 		this.graphiccontrols = graphiccontrols;
 
 		tuioClient = new TuioClient(tuioPort);
@@ -104,9 +108,10 @@ public class TuioInput implements TuioListener {
 	public void addTuioCursor(TuioCursor tcur) {
 		//PApplet.println("add cursor " + tcur.getCursorID() + " (" + tcur.getSessionID() + ") " + tcur.getX() + " " + tcur.getY());
 		
-		int note = graphiccontrols.getLineNote((int)(tcur.getX() * papplet.screenWidth - (papplet.getBounds().getX() + papplet.frame.getBounds().getX())), (int)(tcur.getY() * papplet.screenHeight - (papplet.getBounds().getY() + papplet.frame.getBounds().getY())));
+		int note = graphiccontrols.getElementNote((int)(tcur.getX() * papplet.screenWidth - (papplet.getBounds().getX() + papplet.frame.getBounds().getX())), (int)(tcur.getY() * papplet.screenHeight - (papplet.getBounds().getY() + papplet.frame.getBounds().getY())));
 		
 		if(note != -1){
+			noteoutput.noteOn(note, 1);
 			if(voices.newVoice(note, 1) == true){
 				activeKeys.put(tcur.getSessionID(), note);
 			}
@@ -132,7 +137,10 @@ public class TuioInput implements TuioListener {
 		//PApplet.println("remove cursor " + tcur.getCursorID() + " (" + tcur.getSessionID() + ")");
 		
 		if(activeKeys.containsKey(tcur.getSessionID())){
-			voices.releaseVoice(activeKeys.get(tcur.getSessionID()));
+			int note = activeKeys.get(tcur.getSessionID());
+			
+			noteoutput.noteOff(note);
+			voices.releaseVoice(note);
 			activeKeys.remove(tcur.getSessionID());
 		}
 	}

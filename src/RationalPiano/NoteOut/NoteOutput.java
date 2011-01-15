@@ -1,17 +1,19 @@
 package RationalPiano.NoteOut;
 
+import java.util.concurrent.ConcurrentHashMap;
+
 import processing.core.*;
 
 /**
  * Manages note output for MIDI and OSC
- * Allows to turn on/off notes/voices on a midi channel / osc port
+ * Allows to turn on/off notes/voices on a midi channel / osc port and to de/activate sustain
  * 
  * @author Fabian Ehrentraud
- * @date 2010-09-24
- * @version 1.01
+ * @date 2010-10-10
+ * @version 1.05
  * @licence Licensed under the Open Software License (OSL 3.0)
  */
-public class NoteOutput {
+public class NoteOutput implements INoteOutput {
 
 	/**
 	 * Possible modes of note message outputs: either only via MIDI, only via OSC or both
@@ -24,12 +26,14 @@ public class NoteOutput {
 	private SendMidi sendmidi = null;
 	private SendOsc sendosc = null;
 	
+	private ConcurrentHashMap<Integer, Double> activeNotes = new ConcurrentHashMap<Integer, Double>();
+	
 	/**
 	 * Initializes the MIDI/OSC output
 	 * @param papplet The processing applet to send the MIDI/OSC messages from
 	 * @param outputMode allows to either activate midi output or osc output or both
 	 * @param oscport UDP port to send the OSC note messages to
-	 * @param midiDevice PART of the name of the MIDI device to send the note messages to
+	 * @param midiOutputDevice PART of the name of the MIDI device to send the note messages to
 	 * @param midiChannel MIDI channel to send the note messages to; 0<=midiChannel<=15
 	 */
 	public NoteOutput(PApplet papplet, outputModes outputMode, int oscport, String midiDevice, int midiChannel) {
@@ -43,12 +47,16 @@ public class NoteOutput {
 		}
 	}
 
-	/**
-	 * Turns on the given note via MIDI and/or OSC
-	 * @param midiNoteNumber The MIDI note number to turn on
-	 * @param velocity Initial note velocity; 0<=velocity<=1
+	/* (non-Javadoc)
+	 * @see RationalPiano.NoteOut.INoteOutput#noteOn(int, double)
 	 */
 	public void noteOn(int midiNoteNumber, double velocity){
+		if(activeNotes.containsKey(midiNoteNumber)){
+			noteOff(midiNoteNumber); //note is already active, turn off before
+		}
+		
+		activeNotes.put(midiNoteNumber, velocity);
+		
 		if(oscOn == true){
 			sendosc.voiceOn(midiNoteNumber, (float)velocity);
 		}
@@ -57,16 +65,33 @@ public class NoteOutput {
 		}
 	}
 	
-	/**
-	 * Turns off the given note via MIDI and/or OSC
-	 * @param midiNoteNumber The MIDI note number to turn off
+	/* (non-Javadoc)
+	 * @see RationalPiano.NoteOut.INoteOutput#noteOff(int)
 	 */
 	public void noteOff(int midiNoteNumber){
+		if(!activeNotes.containsKey(midiNoteNumber)){
+			return; //note is not active, no need to turn it off
+		}
+		
+		activeNotes.remove(midiNoteNumber);
+		
 		if(oscOn == true){
 			sendosc.voiceOff(midiNoteNumber);
 		}
 		if(midiOn == true){
 			sendmidi.noteOff(midiNoteNumber);
+		}
+	}
+
+	/* (non-Javadoc)
+	 * @see RationalPiano.NoteOut.INoteOutput#sustain(double)
+	 */
+	public void sustain(double sustain) {
+		if(oscOn == true){
+			sendosc.sustain(sustain);
+		}
+		if(midiOn == true){
+			sendmidi.sustain((int)(127 * sustain));
 		}
 	}
 }

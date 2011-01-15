@@ -6,11 +6,18 @@ import java.util.logging.Logger;
 
 import processing.core.PApplet;
 import RationalPiano.Graphic.GraphicControls;
+import RationalPiano.Graphic.IDrawable;
+import RationalPiano.Graphic.IGraphicControls;
 import RationalPiano.Input.InputDevs;
+import RationalPiano.Input.IKeyInput;
+import RationalPiano.Input.IMouseInput;
 import RationalPiano.Logging.RationalLogger;
 import RationalPiano.NoteOut.NoteOutput;
+import RationalPiano.NoteOut.INoteOutput;
 import RationalPiano.Persistence.ConfigurationData;
 import RationalPiano.VoiceManagement.Voices;
+import RationalPiano.VoiceManagement.IVoices;
+import RationalPiano.VoiceManagement.ITickable;
 
 /**
  * The main class for the RationalPiano application.
@@ -18,18 +25,22 @@ import RationalPiano.VoiceManagement.Voices;
  * Serves all needed functions of PApplet and forwards such method calls to generated objects which are responsible for dedicated functions like input, note output, graphic controls and voice management.
  * 
  * @author Fabian Ehrentraud
- * @date 2010-07-27
- * @version 1.01
+ * @date 2010-10-10
+ * @version 1.05
  * @licence Licensed under the Open Software License (OSL 3.0)
  */
 public class RationalPiano extends PApplet {
 	
 	private static final long serialVersionUID = 1L;
 	
-	private NoteOutput noteoutput;
-	private GraphicControls graphiccontrols;
+	private INoteOutput noteoutput;
+	private IGraphicControls graphiccontrols;
+	private IDrawable graphicdraw;
 	private InputDevs input;
-	private Voices voices;
+	private IKeyInput keyInput;
+	private IMouseInput mouseInput;
+	private IVoices voices;
+	private ITickable voicestick;
 	
 	private static ConfigurationData config;
 	private static final String saveFileName = "RationalPianoSettings.cfg";
@@ -81,12 +92,16 @@ public class RationalPiano extends PApplet {
 	public void setup() {
 		//take care which statements you put before size() or else the code in setup() gets executed twice
 		graphiccontrols = new GraphicControls(this, config.fullscreen, config.width, config.height, config.framerate, config.notecount, config.notestart, config.lineBend, config.backgroundColorHue, config.backgroundColorSaturation, config.backgroundColorBrightness, config.lineColorHueInactive, config.lineColorHueActive, config.lineColorSaturation, config.lineColorBrightness);
+		graphicdraw = graphiccontrols;
 
-		noteoutput = new NoteOutput(this, config.outputMode, config.oscport, config.midiDevice, config.midiChannel);
+		noteoutput = new NoteOutput(this, config.outputMode, config.oscport, config.midiOutputDevice, config.midiChannel);
 
-		voices = new Voices(this, graphiccontrols, noteoutput, config.framerate, config.attack, config.decay, config.sustain, config.release, config.holdSustain, config.maxfrac, config.bellWidth);
+		voices = new Voices(this, graphiccontrols, config.framerate, config.attack, config.decay, config.sustain, config.release, config.holdSustain, config.maxfrac, config.bellWidth);
+		voicestick = voices;
 		
-		input = new InputDevs(this, voices, graphiccontrols, config.tuioPort);
+		input = new InputDevs(this, voices, noteoutput, graphiccontrols, config.tuioPort, config.midiInputDevice);
+		keyInput = input;
+		mouseInput = input;
 		
 		logger.info("Ready");
 	}
@@ -96,8 +111,8 @@ public class RationalPiano extends PApplet {
 	 */
 	@Override
 	public void draw() {
-		voices.voiceTick();
-		graphiccontrols.draw();
+		voicestick.tick();
+		graphicdraw.draw();
 	}
 
 	/**
@@ -105,7 +120,7 @@ public class RationalPiano extends PApplet {
 	 */
 	@Override
 	public void mousePressed() {
-		input.mousePressed(mouseX,mouseY,mouseButton);
+		mouseInput.mousePressed(mouseX,mouseY,mouseButton);
 	}
 	
 	/**
@@ -113,7 +128,7 @@ public class RationalPiano extends PApplet {
 	 */
 	@Override
 	public void mouseReleased() {
-		input.mouseReleased(mouseX,mouseY,mouseButton);
+		mouseInput.mouseReleased(mouseX,mouseY,mouseButton);
 	}
 	
 	/**
@@ -123,7 +138,7 @@ public class RationalPiano extends PApplet {
 	 */
 	@Override
 	public void keyPressed() {
-		input.keyPressed(key);
+		keyInput.keyPressed(key);
 	}
 	
 	/**
@@ -131,7 +146,7 @@ public class RationalPiano extends PApplet {
 	 */
 	@Override
 	public void keyReleased() {
-		input.keyReleased(key);
+		keyInput.keyReleased(key);
 	}
 
 	/**

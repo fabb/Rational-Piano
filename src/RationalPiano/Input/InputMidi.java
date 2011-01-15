@@ -3,9 +3,8 @@ package RationalPiano.Input;
 import java.util.logging.Logger;
 
 import processing.core.PApplet;
-import RationalPiano.Graphic.GraphicControls;
-import RationalPiano.NoteOut.SendMidi;
-import RationalPiano.VoiceManagement.Voices;
+import RationalPiano.NoteOut.INoteOutput;
+import RationalPiano.VoiceManagement.IVoices;
 
 import rwmidi.Controller;
 import rwmidi.Note;
@@ -15,7 +14,8 @@ import rwmidi.MidiInput;
 import rwmidi.SysexMessage;
 
 /**
- * XXX
+ * Receives Midi Notes and CC Messages for Sustain.
+ * Translates presses to newVoice() and noteOn() and releases to releaseVoice() and noteOff().
  * 
  * @author Fabian Ehrentraud
  * @date 2010-09-24
@@ -26,20 +26,22 @@ public class InputMidi {
 	
 	private MidiInput midiinput;
 	private PApplet papplet;
-	private Voices voices;
+	private IVoices voices;
+	private INoteOutput noteoutput;
 	
-	private static final Logger logger = Logger.getLogger(SendMidi.class.getName());
+	private static final Logger logger = Logger.getLogger(InputMidi.class.getName());
 
 	/**
-	 * XXX
-	 * @param papplet
-	 * @param voices
-	 * @param midiDevice
+	 * Initializes the MIDI Input with the given MIDI device.
+	 * @param papplet The processing applet.
+	 * @param voices A Voices object for creating new voices and removing old ones.
+	 * @param noteoutput The NoteOutput object to send note on/off messages to.
+	 * @param midiInputDevice The partial and case-insensitive name of the MIDI Input device which should get opened.
 	 */
-	public InputMidi(PApplet papplet, Voices voices, String midiDevice) {
-		// TODO Auto-generated constructor stub
+	public InputMidi(PApplet papplet, IVoices voices, INoteOutput noteoutput, String midiInputDevice) {
 		this.papplet = papplet;
 		this.voices = voices;
+		this.noteoutput = noteoutput;
 		
 		String devices[] = RWMidi.getInputDeviceNames();
 		
@@ -47,11 +49,11 @@ public class InputMidi {
 		for(String device : devices){
 			logger.config("    " + device);
 		}
-		logger.config("Searching for MIDI Device containing string '" + midiDevice + "'");
+		logger.config("Searching for MIDI Device containing string '" + midiInputDevice + "'");
 		
 		int i;
 		for(i=0; i<devices.length; i++){
-			if(devices[i].toLowerCase().contains(midiDevice.toLowerCase())){
+			if(devices[i].toLowerCase().contains(midiInputDevice.toLowerCase())){
 				logger.config("MIDI Device chosen: '" + devices[i] + "'");
 				break;
 			}
@@ -67,8 +69,9 @@ public class InputMidi {
 	}
 	
 	/**
-	 * XXX
-	 * @param note
+	 * Handles incoming Note On messages.
+	 * Translates these calls to according method calls in the IVoices and INoteOutput objects.
+	 * @param note The received Note On message.
 	 */
 	public void noteOnReceived(Note note){
 		if(note.getVelocity() == 0){
@@ -76,36 +79,51 @@ public class InputMidi {
 			return;
 		}
 		else{
+			noteoutput.noteOn(note.getPitch(), (double)note.getVelocity()/127);
 			voices.newVoice(note.getPitch(),(double)note.getVelocity()/127);
 			//logger.config("Note On: Pitch = " + note.getPitch() + ", Velocity = " + note.getVelocity());
 		}
 	}
 	
 	/**
-	 * XXX
-	 * @param note
+	 * Handles incoming Note Off messages.
+	 * Translates these calls to according method calls in the IVoices and INoteOutput objects.
+	 * @param note The received Note Off message.
 	 */
 	public void noteOffReceived(Note note){
+		noteoutput.noteOff(note.getPitch());
 		voices.releaseVoice(note.getPitch());
 		//logger.config("Note Off: Pitch = " + note.getPitch());
 	}
 	
 	/**
-	 * XXX
-	 * @param controller
+	 * Handles incoming CC messages.
+	 * Only pays attention to Sustain (damper) messages which are CC64 and forwards them to the IVoices and INoteOutput objects.
+	 * @param controller The received CC message.
 	 */
 	public void controllerChangeReceived(Controller controller){
-		//do nothing
+		if(controller.getCC() == 64){
+			noteoutput.sustain((double)controller.getValue() / 127);
+			if(controller.getValue() >= 64){
+				voices.setSustain(true);
+			}else{
+				voices.setSustain(false);
+			}
+		}
 	}
 	
 	/**
-	 * XXX
-	 * @param programchange
+	 * Handles incoming Program Change messages, in this case ignore them.
+	 * @param programchange The received Program Change message.
 	 */
 	public void programChangeReceived(ProgramChange programchange){
 		//do nothing
 	}
 	
+	/**
+	 * Handles incoming Sysex messages, in this case ignore them.
+	 * @param sysexmessage The received Sysex message.
+	 */
 	public void sysexReceived(SysexMessage sysexmessage){
 		//do nothing
 	}

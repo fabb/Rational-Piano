@@ -2,34 +2,35 @@ package RationalPiano.VoiceManagement;
 
 import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.logging.Logger;
 
 import RationalPiano.ConsonanceCalculation.Consonance;
-import RationalPiano.Graphic.GraphicControls;
-import RationalPiano.NoteOut.NoteOutput;
-
+import RationalPiano.ConsonanceCalculation.IConsonance;
+import RationalPiano.Graphic.IGraphicControls;
 import processing.core.PApplet;
 
 /**
- * Manages all active voices and provides functions to add/remove voices and to calculate the consonances of all keys in range which also sets the line widths
+ * Manages all active voices and provides functions to add/remove voices and to calculate the consonances of all keys in range which also sets the visual element strengthness
  * 
  * @author Fabian Ehrentraud
- * @date 2010-09-24
- * @version 1.01
+ * @date 2011-01-15
+ * @version 1.1
  * @licence Licensed under the Open Software License (OSL 3.0)
  */
-public class Voices {
+public class Voices implements IVoices {
 	
 	private PApplet papplet;
-	private GraphicControls graphiccontrols;
-	private NoteOutput noteoutput;
+	private IGraphicControls graphiccontrols;
 	
 	private FadeTracking fade;
-	private Consonance consonance;
+	private IConsonance consonance;
 
 	private HashMap<Integer,Double> voicesValues = new HashMap<Integer,Double>();
 	
 	private ConcurrentHashMap<Integer, OneVoice> activeVoices = new ConcurrentHashMap<Integer, OneVoice>();
+	private ConcurrentSkipListSet<Integer> scheduledRemoveVoices = new ConcurrentSkipListSet<Integer>();  
+	private boolean sustain;
 	
 	private static final Logger logger = Logger.getLogger(Voices.class.getName());
 	
@@ -37,21 +38,19 @@ public class Voices {
 	 * Initializing this class with standard ADSR values
 	 * @param papplet The processing applet belonging to this voice management object.
 	 * @param graphiccontrols The GraphicControls object to ask for line positions and to manipulate lines.
-	 * @param noteoutput The NoteOutput object to send note on/off messages to.
 	 * @param framerate Frame Rate of the target PApplet. Needed for scaling the attack, decay and release values which are given in seconds to frame counts.
 	 * @param holdSustain true if a voice should hold its sustain level after attack + decay phase; false = pluck mode: there is no decay phase at all, the release phase starts directly after the attack phase. 
 	 * @param maxfrac The maximum dissonance value for rational numbers (numerator * denominator) to take account for. 157 is a good value. High values will cause longer initialization times!
 	 * @param bellWidth The width of the bell shaped curve with which each fraction's point get's "fuzzified". bellWidth==1 means it's inflection point is at +- 1/Sqrt(e) semitones. bellWidth>0
 	 */
-	public Voices(PApplet papplet, GraphicControls graphiccontrols, NoteOutput noteoutput, float framerate, Boolean holdSustain, int maxfrac, double bellWidth) {
-		this(papplet, graphiccontrols, noteoutput, framerate, 0.15, 0.5, 0.65, 1, true, maxfrac, bellWidth); //standard values for attack, decay, stustain, release and use holdSustain
+	public Voices(PApplet papplet, IGraphicControls graphiccontrols, float framerate, Boolean holdSustain, int maxfrac, double bellWidth) {
+		this(papplet, graphiccontrols, framerate, 0.15, 0.5, 0.65, 1, true, maxfrac, bellWidth); //standard values for attack, decay, stustain, release and use holdSustain
 	}
 	
 	/**
 	 * Initializing this class with the given parameters
 	 * @param papplet The processing applet belonging to this voice management object.
 	 * @param graphiccontrols The GraphicControls object to ask for line positions and to manipulate lines.
-	 * @param noteoutput The NoteOutput object to send note on/off messages to.
 	 * @param framerate Frame Rate of the target PApplet. Needed for scaling the attack, decay and release values which are given in seconds to frame counts.
 	 * @param attack Attack time in seconds. Time the voice volume reaches the velocity after activating it.
 	 * @param decay Decay time in seconds. Time the voice volume reaches the sustain level after the attack phase.
@@ -61,58 +60,45 @@ public class Voices {
 	 * @param maxfrac The maximum dissonance value for rational numbers (numerator * denominator) to take account for. 157 is a good value. High values will cause longer initialization times!
 	 * @param bellWidth The width of the bell shaped curve with which each fraction's point get's "fuzzified". bellWidth==1 means it's inflection point is at +- 1/Sqrt(e) semitones. bellWidth>0
 	 */
-	public Voices(PApplet papplet, GraphicControls graphiccontrols, NoteOutput noteoutput, float framerate, double attack, double decay, double sustain, double release, boolean holdSustain, int maxfrac, double bellWidth) {
+	public Voices(PApplet papplet, IGraphicControls graphiccontrols, float framerate, double attack, double decay, double sustain, double release, boolean holdSustain, int maxfrac, double bellWidth) {
 		logger.info("Setting up voice management");
 		this.papplet = papplet;
 		this.graphiccontrols = graphiccontrols;
-		this.noteoutput = noteoutput;
 		
 		fade = new FadeTracking(framerate, attack, decay, sustain, release, holdSustain);
 		
-		consonance = new Consonance(graphiccontrols.getFirstLineNote(), graphiccontrols.getLineCount(), maxfrac, bellWidth);
+		consonance = new Consonance(graphiccontrols.getLowestNote(), graphiccontrols.getHighestNote() - graphiccontrols.getLowestNote() + 1, maxfrac, bellWidth);
 	}
 	
-	/**
-	 * Adds a new voice with the given MIDI note number
-	 * Can be concurrently called with voiceTick() or releaseVoice().
-	 * @param midiNoteNumber MIDI note number to turn on
-	 * @param velocity velocity to turn the given note on with; 0<=velocity<=1
-	 * @return true if the given MIDI note was turned off before and now is turned on, false otherwise
+	/* (non-Javadoc)
+	 * @see RationalPiano.VoiceManagement.IVoices#newVoice(int, double)
 	 */
 	public boolean newVoice(int midiNoteNumber, double velocity){
-		double previousVolume = 0;
-		
+		scheduledRemoveVoices.remove(midiNoteNumber); //only interesting when sustain=true
+		graphiccontrols.setElementActive(midiNoteNumber, true);
+
 		if(activeVoices.keySet().contains(midiNoteNumber)){
-			if(activeVoices.get(midiNoteNumber).isReleased() == false){
-				return false; //nothing to do, already active, only one voice per note
-			} else {
-				previousVolume = fade.getCurrentVelocity(activeVoices.get(midiNoteNumber));
-				activeVoices.remove(midiNoteNumber);
-			}
+			double previousVolume = fade.getCurrentVelocity(activeVoices.get(midiNoteNumber));
+			activeVoices.get(midiNoteNumber).retrigger(velocity,previousVolume);
+		}else{
+			activeVoices.put(midiNoteNumber, new OneVoice(midiNoteNumber, velocity));
 		}
-		
-		noteoutput.noteOn(midiNoteNumber, velocity);
-		
-		graphiccontrols.setLineActive(midiNoteNumber, true);
-		
-		activeVoices.put(midiNoteNumber, new OneVoice(midiNoteNumber, velocity, previousVolume));
-		
 		return true;
 	}
 	
-	/**
-	 * Releases the given voice. This will start the voice's release phase.
-	 * Can be concurrently called with voiceTick() or newVoice().
-	 * @param midiNoteNumber MIDI note number to turn off
-	 * @return true if the given MIDI note was turned on before and thus was turned off, false otherwise
+	/* (non-Javadoc)
+	 * @see RationalPiano.VoiceManagement.IVoices#releaseVoice(int)
 	 */
 	public boolean releaseVoice(int midiNoteNumber){
-		//the following two lines are not in the if branch because it would not release the voice when the voice was already faded out and after that the voice is released (only in holdSustain mode)
-		noteoutput.noteOff(midiNoteNumber);
-		graphiccontrols.setLineActive(midiNoteNumber, false);
+		//the following line is not in the if branch because it would not release the voice when the voice was already faded out and after that the voice is released (only in holdSustain mode)
+		graphiccontrols.setElementActive(midiNoteNumber, false); 
 		
 		if(activeVoices.keySet().contains(midiNoteNumber) && activeVoices.get(midiNoteNumber).isReleased() == false){
-			activeVoices.get(midiNoteNumber).release();
+			if(sustain == true){
+				scheduledRemoveVoices.add(midiNoteNumber);
+			}else{
+				activeVoices.get(midiNoteNumber).release();
+			}
 			
 			return true;
 		}
@@ -125,9 +111,16 @@ public class Voices {
 	 * Increments the hold time for each voice which sets its internal value to a new one according to ADSR.
 	 * Also calculates the consonance anew.
 	 */
-	public void voiceTick(){
+	public void tick(){
 		OneVoice voice;
 		double velo;
+		
+		if(sustain == false){
+			for(Integer midiNoteNumber : scheduledRemoveVoices){
+				activeVoices.get(midiNoteNumber).release();
+				scheduledRemoveVoices.remove(midiNoteNumber);
+			}
+		}
 		
 		//calculate current voice velocities
 		
@@ -162,7 +155,12 @@ public class Voices {
 		//set line widths according to found consonances
 		
 		for(Integer key : voiceConsonances.keySet()){
-			graphiccontrols.setLineWidth(key, voiceConsonances.get(key));
+			graphiccontrols.setElementWidth(key, voiceConsonances.get(key));
 		}
+	}
+
+	@Override
+	public void setSustain(boolean sustain) {
+		this.sustain = sustain;
 	}
 }

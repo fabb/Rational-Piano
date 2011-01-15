@@ -6,18 +6,18 @@ import java.util.ArrayList;
 import processing.core.PApplet;
 
 /**
- * Represents an array of several GraphicVerticalLine objects with iterated corresponding MIDI note numbers
+ * Represents an array of several IGraphicVisualizationElement objects with iterated corresponding MIDI note numbers
  * 
  * @author Fabian Ehrentraud
- * @date 2010-07-26
- * @version 1.0
+ * @date 2010-10-20
+ * @version 1.01
  * @licence Licensed under the Open Software License (OSL 3.0)
  */
-public class GraphicNoteLineArray {
+public class GraphicNoteLineArray implements IGraphicVisualizationElementArray {
 
 	private PApplet papplet;
 	
-	private ArrayList<GraphicVerticalLine> lines = new ArrayList<GraphicVerticalLine>();
+	private ArrayList<IGraphicVisualizationElement> lines = new ArrayList<IGraphicVisualizationElement>();
 	private int lineCount;
 	private int x_min;
 	private int x_max;
@@ -52,20 +52,18 @@ public class GraphicNoteLineArray {
 		
 		roundOffset = ((x_max-x_min) - (x_max-x_min)/lineCount*lineCount) / 2; //every line has a width that's a whole number; if the width of the notelinearray is not divisible by the line count, they will get centered 
 		int spacing = (x_max-x_min)/(lineCount);
-		GraphicVerticalLine line;
+		IGraphicVisualizationElement line;
 		for(int i=0; i<lineCount; i++){
-			line = new GraphicVerticalLine(this.papplet, spacing, y_bottom-y_top, x_min + roundOffset + spacing*(i+1) - spacing/2 , y_top, lineBend, lineColorHueInactive, lineColorHueActive, lineColorSaturation, lineColorBrightness);
+			line = new GraphicVerticalLineTriangle2(this.papplet, spacing, y_bottom-y_top, x_min + roundOffset + spacing*(i+1) - spacing/2 , y_top, lineBend, lineColorHueInactive, lineColorHueActive, lineColorSaturation, lineColorBrightness);
 			lines.add(line);
 		}
 	}
 
-	/**
-	 * Gets the MIDI note number of the line at the specified coordinate
-	 * @param at_x X coordinate
-	 * @param at_y Y coordinate
-	 * @return MIDI note number of the line at the specified coordinate; -1 in case that the coordinates are out of the area of the line array
+	/* (non-Javadoc)
+	 * @see RationalPiano.Graphic.IGraphicVisualizationElementArray#getElementNote(int, int)
 	 */
-	public int getLineNote(int at_x, int at_y){
+	@Override
+	public int getElementNote(int at_x, int at_y){
 		if(at_x < x_min || at_x > x_max || at_y < y_top || at_y > y_bottom){
 			return -1;
 		}
@@ -86,28 +84,30 @@ public class GraphicNoteLineArray {
 		return midi_notestart + i-1;
 	}
 
-	/**
-	 * @return The midi note number of the first (leftmost) line
+	/* (non-Javadoc)
+	 * @see RationalPiano.Graphic.IGraphicVisualizationElementArray#getLowestNote()
 	 */
-	public int getFirstLineNote(){
+	@Override
+	public int getLowestNote(){
 		return midi_notestart;
 	}
 
-	/**
-	 * Draws all lines with their according width
+	/* (non-Javadoc)
+	 * @see RationalPiano.Graphic.IGraphicVisualizationElementArray#draw()
 	 */
+	@Override
 	public void draw() {
-		for(GraphicVerticalLine l : lines){
+		for(IGraphicVisualizationElement l : lines){
 			l.draw();
 		}
 
 	}
 
-	/**
-	 * @param midiNoteNumber The MIDI note number to return the corresponding line for
-	 * @return The GraphicVerticalLine corresponding to the specified MIDI note number
+	/* (non-Javadoc)
+	 * @see RationalPiano.Graphic.IGraphicVisualizationElementArray#getElement(int)
 	 */
-	public GraphicVerticalLine getLine(int midiNoteNumber) {
+	@Override
+	public IGraphicVisualizationElement getElement(int midiNoteNumber) {
 		if(midiNoteNumber - midi_notestart >= 0 && midiNoteNumber - midi_notestart < lines.size()){
 			return lines.get(midiNoteNumber - midi_notestart);
 		} else {
@@ -115,11 +115,12 @@ public class GraphicNoteLineArray {
 		}
 	}
 
-	/**
-	 * @return The count of lines that are drawn on the screen.
+	/* (non-Javadoc)
+	 * @see RationalPiano.Graphic.IGraphicVisualizationElementArray#getHighestNote()
 	 */
-	public int getLineCount() {
-		return lineCount;
+	@Override
+	public int getHighestNote() {
+		return midi_notestart + lineCount - 1;
 	}
 
 }

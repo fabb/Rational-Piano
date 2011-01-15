@@ -26,7 +26,7 @@ import RationalPiano.Persistence.Annotations.FieldIntegerMinMax;
  * 
  * @author Fabian Ehrentraud
  * @date 2010-09-24
- * @version 1.01
+ * @version 1.05
  * @licence Licensed under the Open Software License (OSL 3.0)
  */
 public class ConfigurationData {
@@ -37,11 +37,11 @@ public class ConfigurationData {
 	
 	@FieldDescription(description="width of the applet window (only in windowed mode), values smaller than the screen width get cropped")
 	@FieldIntegerMinMax(min=100, max=10000)
-	public Integer width = 400;
+	public Integer width = 1000;
 	
 	@FieldDescription(description="height of the applet window (only in windowed mode), values smaller than the screen height get cropped")
 	@FieldIntegerMinMax(min=100, max=10000)
-	public Integer height = 300;
+	public Integer height = 500;
 	
 	@FieldDescription(description="framerate in frames per second")
 	@FieldFloatMinMax(min=1, max=200)
@@ -49,11 +49,11 @@ public class ConfigurationData {
 	
 	@FieldDescription(description="count of notes to display; the maximum MIDI note number is 127, so notestart + notecount - 1 should be smaller than 128")
 	@FieldIntegerMinMax(min=1, max=128)
-	public Integer notecount = 25;
+	public Integer notecount = 88;
 	
 	@FieldDescription(description="midi note number of the first note, 60 = C4; the maximum MIDI note number is 127, so notestart + notecount - 1 should be smaller than 128")
 	@FieldIntegerMinMax(min=0, max=127)
-	public Integer notestart = 60;
+	public Integer notestart = 21;
 	
 	@FieldDescription(description="nonlinear distortion of the line width translation, 1 means no distortion, smaller values mean stronger distortion where the lines have a tendency to be more wide")
 	@FieldDoubleMinMax(min=0, max=1) // > 1 also possible, but not as useful
@@ -66,8 +66,11 @@ public class ConfigurationData {
 	@FieldIntegerMinMax(min=0, max=65535)
 	public Integer oscport = 12000;
 	
-	@FieldDescription(description="a part of the wanted midi device's name where to send the note messages to")
-	public String midiDevice = "Maple Midi Out: Port 4";
+	@FieldDescription(description="a part of the wanted midi output device's name where to send the note messages to")
+	public String midiOutputDevice = "Maple Midi Out: Port 4";
+	
+	@FieldDescription(description="a part of the wanted midi input device's name where to get note messages from")
+	public String midiInputDevice = "EDIROL PCR 1";
 	
 	@FieldDescription(description="midi channel that should get used for the note messages")
 	@FieldIntegerMinMax(min=0, max=15)
@@ -131,6 +134,7 @@ public class ConfigurationData {
 	@FieldDescription(description="color brightness of a line")
 	@FieldIntegerMinMax(min=0, max=255)
 	public Integer lineColorBrightness = 255;
+
 
 	private static final Logger logger = Logger.getLogger(ConfigurationData.class.getName());
 
