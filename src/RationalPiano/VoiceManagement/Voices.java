@@ -67,7 +67,7 @@ public class Voices implements IVoices {
 		
 		fade = new FadeTracking(framerate, attack, decay, sustain, release, holdSustain);
 		
-		consonance = new Consonance(graphiccontrols.getLowestNote(), graphiccontrols.getHighestNote() - graphiccontrols.getLowestNote() + 1, maxfrac, bellWidth);
+		consonance = new Consonance(graphiccontrols.getGraphicVisualizationElementArray().getLowestNote(), graphiccontrols.getGraphicVisualizationElementArray().getHighestNote() - graphiccontrols.getGraphicVisualizationElementArray().getLowestNote() + 1, maxfrac, bellWidth);
 	}
 	
 	/* (non-Javadoc)
@@ -75,7 +75,10 @@ public class Voices implements IVoices {
 	 */
 	public boolean newVoice(int midiNoteNumber, double velocity){
 		scheduledRemoveVoices.remove(midiNoteNumber); //only interesting when sustain=true
-		graphiccontrols.setElementActive(midiNoteNumber, true);
+		try{
+			graphiccontrols.getGraphicVisualizationElementArray().getElement(midiNoteNumber).setActive(true);
+		}catch(NullPointerException e){
+		}
 
 		if(activeVoices.keySet().contains(midiNoteNumber)){
 			double previousVolume = fade.getCurrentVelocity(activeVoices.get(midiNoteNumber));
@@ -91,7 +94,10 @@ public class Voices implements IVoices {
 	 */
 	public boolean releaseVoice(int midiNoteNumber){
 		//the following line is not in the if branch because it would not release the voice when the voice was already faded out and after that the voice is released (only in holdSustain mode)
-		graphiccontrols.setElementActive(midiNoteNumber, false); 
+		try{
+			graphiccontrols.getGraphicVisualizationElementArray().getElement(midiNoteNumber).setActive(false);
+		}catch(NullPointerException e){
+		}
 		
 		if(activeVoices.keySet().contains(midiNoteNumber) && activeVoices.get(midiNoteNumber).isReleased() == false){
 			if(sustain == true){
@@ -155,7 +161,10 @@ public class Voices implements IVoices {
 		//set line widths according to found consonances
 		
 		for(Integer key : voiceConsonances.keySet()){
-			graphiccontrols.setElementWidth(key, voiceConsonances.get(key));
+			try{
+				graphiccontrols.getGraphicVisualizationElementArray().getElement(key).setVolume(voiceConsonances.get(key));
+			}catch(NullPointerException e){
+			}
 		}
 	}
 

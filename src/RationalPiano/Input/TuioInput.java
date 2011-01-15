@@ -4,7 +4,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 
 import processing.core.PApplet;
-import RationalPiano.Graphic.IGraphicControlsPassive;
+import RationalPiano.Graphic.IGraphicControls;
 import RationalPiano.NoteOut.INoteOutput;
 import RationalPiano.VoiceManagement.IVoices;
 import TUIO.TuioClient;
@@ -31,7 +31,7 @@ public class TuioInput implements TuioListener {
 
 	private IVoices voices;
 	private INoteOutput noteoutput;
-	private IGraphicControlsPassive graphiccontrols;
+	private IGraphicControls graphiccontrols;
 	
 	//key is sessionid and object is midi note number
 	private ConcurrentHashMap<Long, Integer> activeKeys = new ConcurrentHashMap<Long, Integer>();
@@ -47,7 +47,7 @@ public class TuioInput implements TuioListener {
 	 * @param graphiccontrols The IGraphicControlsPassive object to ask for line positions.
 	 * @param tuioPort The local UDP port the TUIO Listener should listen at
 	 */
-	public TuioInput(PApplet papplet, IVoices voices, INoteOutput noteoutput, IGraphicControlsPassive graphiccontrols, int tuioPort) {
+	public TuioInput(PApplet papplet, IVoices voices, INoteOutput noteoutput, IGraphicControls graphiccontrols, int tuioPort) {
 		logger.info("Setting up TUIO input");
 		this.papplet = papplet;
 		this.tuioPort = tuioPort;
@@ -108,7 +108,7 @@ public class TuioInput implements TuioListener {
 	public void addTuioCursor(TuioCursor tcur) {
 		//PApplet.println("add cursor " + tcur.getCursorID() + " (" + tcur.getSessionID() + ") " + tcur.getX() + " " + tcur.getY());
 		
-		int note = graphiccontrols.getElementNote((int)(tcur.getX() * papplet.screenWidth - (papplet.getBounds().getX() + papplet.frame.getBounds().getX())), (int)(tcur.getY() * papplet.screenHeight - (papplet.getBounds().getY() + papplet.frame.getBounds().getY())));
+		int note = graphiccontrols.getGraphicVisualizationElementArray().getElementNote((int)(tcur.getX() * papplet.screenWidth - (papplet.getBounds().getX() + papplet.frame.getBounds().getX())), (int)(tcur.getY() * papplet.screenHeight - (papplet.getBounds().getY() + papplet.frame.getBounds().getY())));
 		
 		if(note != -1){
 			noteoutput.noteOn(note, 1);

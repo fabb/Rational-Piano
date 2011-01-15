@@ -42,14 +42,17 @@ public class GraphicControlsTest extends PApplet {
 	@Override
 	public void draw() {
 		for(int i = notestart; i<=notestart+notecount; i++){
-			if (i%2 == 0){
-				graphiccontrols.setElementWidth(i, 1/(1+100*w));
-			}else{
-				graphiccontrols.setElementWidth(i, 1/(1+100*(1-w)));
-			}
-			
-			if (i%3 == 0){
-				graphiccontrols.setElementActive(i, true);
+			try{
+				if (i%2 == 0){
+					graphiccontrols.getGraphicVisualizationElementArray().getElement(i).setVolume(1/(1+100*w));
+				}else{
+					graphiccontrols.getGraphicVisualizationElementArray().getElement(i).setVolume(1/(1+100*(1-w)));
+				}
+				
+				if (i%3 == 0){
+					graphiccontrols.getGraphicVisualizationElementArray().getElement(i).setActive(true);
+				}
+			}catch(NullPointerException e){
 			}
 		}
 			

@@ -3,7 +3,7 @@ package RationalPiano.Input;
 import java.util.concurrent.ConcurrentHashMap;
 
 import processing.core.PApplet;
-import RationalPiano.Graphic.IGraphicControlsPassive;
+import RationalPiano.Graphic.IGraphicControls;
 import RationalPiano.NoteOut.INoteOutput;
 import RationalPiano.VoiceManagement.IVoices;
 
@@ -21,7 +21,7 @@ public class InputDevs implements IKeyInput, IMouseInput {
 	private PApplet papplet;
 	private IVoices voices;
 	private INoteOutput noteoutput;
-	private IGraphicControlsPassive graphiccontrols;
+	private IGraphicControls graphiccontrols;
 	private TuioInput tuioinput;
 	private InputMidi midiinput;
 	
@@ -38,7 +38,7 @@ public class InputDevs implements IKeyInput, IMouseInput {
 	 * @param tuioPort The local UDP port the TUIO Listener should listen at
 	 * @param midiInputDevice Partial case-insensitive name of the wanted Midi Input Device
 	 */
-	public InputDevs(PApplet papplet, IVoices voices, INoteOutput noteoutput, IGraphicControlsPassive graphiccontrols, int tuioPort, String midiInputDevice) {
+	public InputDevs(PApplet papplet, IVoices voices, INoteOutput noteoutput, IGraphicControls graphiccontrols, int tuioPort, String midiInputDevice) {
 		this.papplet = papplet;
 		this.voices = voices;
 		this.noteoutput = noteoutput;
@@ -56,7 +56,7 @@ public class InputDevs implements IKeyInput, IMouseInput {
 			return; //clicked another mouse button while one was still held down
 		}
 		
-		lastMouseNote = graphiccontrols.getElementNote(mouseX,mouseY);
+		lastMouseNote = graphiccontrols.getGraphicVisualizationElementArray().getElementNote(mouseX,mouseY);
 		//lines.getLine(this.mouseX).volume((int)(Math.random()*255));
 		
 		if(lastMouseNote != -1){
@@ -131,73 +131,73 @@ public class InputDevs implements IKeyInput, IMouseInput {
 	private int toNote(char key){
 		switch(key){
 		case 'y': 
-			return graphiccontrols.getLowestNote() + 0;
+			return graphiccontrols.getGraphicVisualizationElementArray().getLowestNote() + 0;
 		case 'x': 
-			return graphiccontrols.getLowestNote() + 1;
+			return graphiccontrols.getGraphicVisualizationElementArray().getLowestNote() + 1;
 		case 'c': 
-			return graphiccontrols.getLowestNote() + 2;
+			return graphiccontrols.getGraphicVisualizationElementArray().getLowestNote() + 2;
 		case 'v': 
-			return graphiccontrols.getLowestNote() + 3;
+			return graphiccontrols.getGraphicVisualizationElementArray().getLowestNote() + 3;
 		case 'b': 
-			return graphiccontrols.getLowestNote() + 4;
+			return graphiccontrols.getGraphicVisualizationElementArray().getLowestNote() + 4;
 		case 'n': 
-			return graphiccontrols.getLowestNote() + 5;
+			return graphiccontrols.getGraphicVisualizationElementArray().getLowestNote() + 5;
 		case 'm': 
-			return graphiccontrols.getLowestNote() + 6;
+			return graphiccontrols.getGraphicVisualizationElementArray().getLowestNote() + 6;
 		case ',': 
-			return graphiccontrols.getLowestNote() + 7;
+			return graphiccontrols.getGraphicVisualizationElementArray().getLowestNote() + 7;
 		case '.': 
-			return graphiccontrols.getLowestNote() + 8;
+			return graphiccontrols.getGraphicVisualizationElementArray().getLowestNote() + 8;
 		case '-': 
-			return graphiccontrols.getLowestNote() + 9;
+			return graphiccontrols.getGraphicVisualizationElementArray().getLowestNote() + 9;
 		case 'a': 
-			return graphiccontrols.getLowestNote() + 10;
+			return graphiccontrols.getGraphicVisualizationElementArray().getLowestNote() + 10;
 		case 's': 
-			return graphiccontrols.getLowestNote() + 11;
+			return graphiccontrols.getGraphicVisualizationElementArray().getLowestNote() + 11;
 		case 'd': 
-			return graphiccontrols.getLowestNote() + 12;
+			return graphiccontrols.getGraphicVisualizationElementArray().getLowestNote() + 12;
 		case 'f': 
-			return graphiccontrols.getLowestNote() + 13;
+			return graphiccontrols.getGraphicVisualizationElementArray().getLowestNote() + 13;
 		case 'g': 
-			return graphiccontrols.getLowestNote() + 14;
+			return graphiccontrols.getGraphicVisualizationElementArray().getLowestNote() + 14;
 		case 'h': 
-			return graphiccontrols.getLowestNote() + 15;
+			return graphiccontrols.getGraphicVisualizationElementArray().getLowestNote() + 15;
 		case 'j': 
-			return graphiccontrols.getLowestNote() + 16;
+			return graphiccontrols.getGraphicVisualizationElementArray().getLowestNote() + 16;
 		case 'k': 
-			return graphiccontrols.getLowestNote() + 17;
+			return graphiccontrols.getGraphicVisualizationElementArray().getLowestNote() + 17;
 		case 'l': 
-			return graphiccontrols.getLowestNote() + 18;
+			return graphiccontrols.getGraphicVisualizationElementArray().getLowestNote() + 18;
 		case 'ö': 
-			return graphiccontrols.getLowestNote() + 19;
+			return graphiccontrols.getGraphicVisualizationElementArray().getLowestNote() + 19;
 		case 'ä': 
-			return graphiccontrols.getLowestNote() + 20;
+			return graphiccontrols.getGraphicVisualizationElementArray().getLowestNote() + 20;
 		case 'q': 
-			return graphiccontrols.getLowestNote() + 21;
+			return graphiccontrols.getGraphicVisualizationElementArray().getLowestNote() + 21;
 		case 'w': 
-			return graphiccontrols.getLowestNote() + 22;
+			return graphiccontrols.getGraphicVisualizationElementArray().getLowestNote() + 22;
 		case 'e': 
-			return graphiccontrols.getLowestNote() + 23;
+			return graphiccontrols.getGraphicVisualizationElementArray().getLowestNote() + 23;
 		case 'r': 
-			return graphiccontrols.getLowestNote() + 24;
+			return graphiccontrols.getGraphicVisualizationElementArray().getLowestNote() + 24;
 		case 't': 
-			return graphiccontrols.getLowestNote() + 25;
+			return graphiccontrols.getGraphicVisualizationElementArray().getLowestNote() + 25;
 		case 'z': 
-			return graphiccontrols.getLowestNote() + 26;
+			return graphiccontrols.getGraphicVisualizationElementArray().getLowestNote() + 26;
 		case 'u': 
-			return graphiccontrols.getLowestNote() + 27;
+			return graphiccontrols.getGraphicVisualizationElementArray().getLowestNote() + 27;
 		case 'i': 
-			return graphiccontrols.getLowestNote() + 28;
+			return graphiccontrols.getGraphicVisualizationElementArray().getLowestNote() + 28;
 		case 'o': 
-			return graphiccontrols.getLowestNote() + 29;
+			return graphiccontrols.getGraphicVisualizationElementArray().getLowestNote() + 29;
 		case 'p': 
-			return graphiccontrols.getLowestNote() + 30;
+			return graphiccontrols.getGraphicVisualizationElementArray().getLowestNote() + 30;
 		case 'ü': 
-			return graphiccontrols.getLowestNote() + 31;
+			return graphiccontrols.getGraphicVisualizationElementArray().getLowestNote() + 31;
 		case '+': 
-			return graphiccontrols.getLowestNote() + 32;
+			return graphiccontrols.getGraphicVisualizationElementArray().getLowestNote() + 32;
 		case '#': 
-			return graphiccontrols.getLowestNote() + 33;
+			return graphiccontrols.getGraphicVisualizationElementArray().getLowestNote() + 33;
 		default:
 			return -1;
 		}

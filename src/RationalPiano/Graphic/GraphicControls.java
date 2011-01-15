@@ -125,45 +125,11 @@ public class GraphicControls implements IGraphicControls {
 	}
 
 	/* (non-Javadoc)
-	 * @see RationalPiano.Graphic.IGraphicControls#setElementWidth(int, double)
+	 * @see RationalPiano.Graphic.IGraphicControls#getGraphicVisualizationElementArray()
 	 */
-	public void setElementWidth(int key, double width) {
-		IGraphicVisualizationElement line = graphiclines.getElement(key);
-		if(line != null){
-			line.setVolume(width);
-		}
-	}
-	
-	/* (non-Javadoc)
-	 * @see RationalPiano.Graphic.IGraphicControls#getElementNote(int, int)
-	 */
-	public int getElementNote(int at_x, int at_y){
-		return graphiclines.getElementNote(at_x, at_y);
-	}
-	
-	/* (non-Javadoc)
-	 * @see RationalPiano.Graphic.IGraphicControls#getLowestNote()
-	 */
-	public int getLowestNote(){
-		return graphiclines.getLowestNote();
-	}
-	
-	/* (non-Javadoc)
-	 * @see RationalPiano.Graphic.IGraphicControls#getHighestNote()
-	 */
-	public int getHighestNote(){
-		return graphiclines.getHighestNote();
-	}
-
-	/* (non-Javadoc)
-	 * @see RationalPiano.Graphic.IGraphicControls#setElementActive(int, boolean)
-	 */
-	public void setElementActive(int key, boolean active) {
-		IGraphicVisualizationElement line = graphiclines.getElement(key);
-		
-		if(line != null){
-			line.setActive(active);	
-		}
+	@Override
+	public IGraphicVisualizationElementArray getGraphicVisualizationElementArray() {
+		return graphiclines;
 	}
 
 }
