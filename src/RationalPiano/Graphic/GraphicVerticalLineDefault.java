@@ -54,9 +54,7 @@ public class GraphicVerticalLineDefault implements IGraphicVisualizationElement 
 		this.brightness = lineColorBrightness;
 	}
 
-	/* (non-Javadoc)
-	 * @see RationalPiano.Graphic.IGraphicVisualizationElement#setVolume(double)
-	 */
+	@Override
 	public void setVolume(double volume){
 		if(volume>=0 && volume <=1){
 			int v;
@@ -66,16 +64,12 @@ public class GraphicVerticalLineDefault implements IGraphicVisualizationElement 
 		}
 	}
 	
-	/* (non-Javadoc)
-	 * @see RationalPiano.Graphic.IGraphicVisualizationElement#setActive(boolean)
-	 */
+	@Override
 	public void setActive(boolean active){
 		this.active = active;
 	}
 
-	/* (non-Javadoc)
-	 * @see RationalPiano.Graphic.IGraphicVisualizationElement#draw()
-	 */
+	@Override
 	public void draw() {
 		papplet.colorMode(PConstants.HSB); //be warned: this will change all color uses in the whole PApplet unless a colorMode() call precedes those
 		

@@ -99,9 +99,7 @@ public class GraphicControls implements IGraphicControls {
 		//TODO generate parameter controls for live-tweaking parameters
 	}
 
-	/* (non-Javadoc)
-	 * @see RationalPiano.Graphic.IGraphicControls#draw()
-	 */
+	@Override
 	public void draw() {
 		papplet.colorMode(PConstants.HSB); //be warned: this will change all color uses in the whole PApplet unless a colorMode() call precedes those
 		
@@ -124,9 +122,6 @@ public class GraphicControls implements IGraphicControls {
 		//TODO draw parameter controls
 	}
 
-	/* (non-Javadoc)
-	 * @see RationalPiano.Graphic.IGraphicControls#getGraphicVisualizationElementArray()
-	 */
 	@Override
 	public IGraphicVisualizationElementArray getGraphicVisualizationElementArray() {
 		return graphiclines;

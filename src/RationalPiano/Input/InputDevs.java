@@ -8,7 +8,7 @@ import RationalPiano.NoteOut.INoteOutput;
 import RationalPiano.VoiceManagement.IVoices;
 
 /**
- * Manages Input from Mouse, Keyboard, MIDI and Multitouch XXX.
+ * Manages Input from Mouse, Keyboard, MIDI and Multitouch.
  * Translates presses to newVoice() and noteOn() and releases to releaseVoice() and noteOff().
  * 
  * @author Fabian Ehrentraud
@@ -47,9 +47,7 @@ public class InputDevs implements IKeyInput, IMouseInput {
 		this.midiinput = new InputMidi(papplet, voices, noteoutput, midiInputDevice);
 	}
 
-	/* (non-Javadoc)
-	 * @see RationalPiano.Input.IMouseInput#mousePressed(int, int, int)
-	 */
+	@Override
 	public void mousePressed(int mouseX, int mouseY, int mouseButton) {
 		//PApplet.println(mouseButton); //debug
 		if(lastMouseNote != -1){
@@ -65,9 +63,7 @@ public class InputDevs implements IKeyInput, IMouseInput {
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see RationalPiano.Input.IMouseInput#mouseReleased(int, int, int)
-	 */
+	@Override
 	public void mouseReleased(int mouseX, int mouseY, int mouseButton) {
 		//note_last = graphiccontrols.getLineNote(mouseX,mouseY); //not necessary as the last key is released
 		
@@ -79,9 +75,7 @@ public class InputDevs implements IKeyInput, IMouseInput {
 		lastMouseNote = -1;
 	}
 
-	/* (non-Javadoc)
-	 * @see RationalPiano.Input.IKeyInput#keyPressed(char)
-	 */
+	@Override
 	public void keyPressed(char key) {
 		if(activeKeys.containsKey((int)key)){
 			//PApplet.println("already in"); //for debug
@@ -101,9 +95,7 @@ public class InputDevs implements IKeyInput, IMouseInput {
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see RationalPiano.Input.IKeyInput#keyReleased(char)
-	 */
+	@Override
 	public void keyReleased(char key) {
 		if(activeKeys.containsKey((int)key)){
 			//PApplet.println("removed"); //for debug

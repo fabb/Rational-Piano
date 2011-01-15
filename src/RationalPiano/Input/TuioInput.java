@@ -64,6 +64,7 @@ public class TuioInput implements TuioListener {
 	 * Close socket when quitting.
 	 * FIXME won't get called - but actually it isn't needed either
 	 */
+	@Override
 	public void finalize(){
 		if(tuioClient.isConnected()){
 			logger.info("Closing TUIO port");
@@ -78,6 +79,7 @@ public class TuioInput implements TuioListener {
 	 * This is being ignored in this application.
 	 * @param tobj Object that has been added.
 	 */
+	@Override
 	public void addTuioObject(TuioObject tobj) {
 		//PApplet.println("add object " + tobj.getSymbolID() + " (" + tobj.getSessionID() + ") " + tobj.getX() + " " + tobj.getY() + " " + tobj.getAngle());
 	}
@@ -87,6 +89,7 @@ public class TuioInput implements TuioListener {
 	 * This is being ignored in this application.
 	 * @param tobj Object that has been removed.
 	 */
+	@Override
 	public void removeTuioObject(TuioObject tobj) {
 		//PApplet.println("remove object " + tobj.getSymbolID() + " (" + tobj.getSessionID() + ")");
 	}
@@ -96,6 +99,7 @@ public class TuioInput implements TuioListener {
 	 * This is being ignored in this application.
 	 * @param tobj Object that has been moved.
 	 */
+	@Override
 	public void updateTuioObject(TuioObject tobj) {
 		//PApplet.println("update object " + tobj.getSymbolID() + " (" + tobj.getSessionID() + ") " + tobj.getX() + " " + tobj.getY() + " " + tobj.getAngle() + " " + tobj.getMotionSpeed() + " " + tobj.getRotationSpeed() + " " + tobj.getMotionAccel() + " " + tobj.getRotationAccel());
 	}
@@ -105,6 +109,7 @@ public class TuioInput implements TuioListener {
 	 * This adds a new voice corresponding to the line at the pressed point.
 	 * @param tcur Cursor that has been added.
 	 */
+	@Override
 	public void addTuioCursor(TuioCursor tcur) {
 		//PApplet.println("add cursor " + tcur.getCursorID() + " (" + tcur.getSessionID() + ") " + tcur.getX() + " " + tcur.getY());
 		
@@ -124,6 +129,7 @@ public class TuioInput implements TuioListener {
 	 * This is being ignored in this application.
 	 * @param tcur Cursor that has been moved
 	 */
+	@Override
 	public void updateTuioCursor(TuioCursor tcur) {
 		//PApplet.println("update cursor " + tcur.getCursorID() + " (" + tcur.getSessionID() + ") " + tcur.getX() + " " + tcur.getY() + " " + tcur.getMotionSpeed() + " " + tcur.getMotionAccel());
 	}
@@ -133,6 +139,7 @@ public class TuioInput implements TuioListener {
 	 * This releases the according voice.
 	 * @param tcur Cursor that has been removed.
 	 */
+	@Override
 	public void removeTuioCursor(TuioCursor tcur) {
 		//PApplet.println("remove cursor " + tcur.getCursorID() + " (" + tcur.getSessionID() + ")");
 		
@@ -150,6 +157,7 @@ public class TuioInput implements TuioListener {
 	 * This is being ignored in this application.
 	 * @param bundleTime Time that the whole bundle has been sent at.
 	 */
+	@Override
 	public void refresh(TuioTime bundleTime) {
 		//papplet.redraw();
 	}

@@ -42,6 +42,7 @@ public class SendOsc {
 	 * Close socket when quitting.
 	 * FIXME won't get called - but actually it isn't needed either
 	 */
+	@Override
 	public void finalize(){
 		logger.info("Closing OSC port");
 		out.close();
@@ -70,7 +71,6 @@ public class SendOsc {
 	 * @return The synoscopy voice number the midi note got associated with.
 	 */
 	private int useFreeVoice(int midiNoteNumber) {
-		//TODO better voice management - warning: when reusing a voice that is still in its release phase, that cuts the old voice. that's why here's a voice per note number used yet
 		if(activeVoices.contains(midiNoteNumber)){
 			//if the midi note number is already in the list, reuse the voice number - should not happen with properly working Voices class
 			int v = activeVoices.get(midiNoteNumber);
@@ -108,12 +108,12 @@ public class SendOsc {
 	}
 
 	/**
-	 * 
-	 * @param sustain
+	 * Sends a sustain message with the given sustain value.
+	 * @param sustain Sustain value to send; 0<=sustain<=1
 	 */
 	public void sustain(double sustain) {
 		SynMessage msg;
-		msg = new SYN().synth(1).sustain(sustain); //TODO check if the argument has the right data range
+		msg = new SYN().synth(1).sustain(sustain); //TODO check if the argument has the right data range [0,1]
 		out.send(msg, papplet);
 	}
 

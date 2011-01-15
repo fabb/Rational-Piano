@@ -70,9 +70,7 @@ public class Voices implements IVoices {
 		consonance = new Consonance(graphiccontrols.getGraphicVisualizationElementArray().getLowestNote(), graphiccontrols.getGraphicVisualizationElementArray().getHighestNote() - graphiccontrols.getGraphicVisualizationElementArray().getLowestNote() + 1, maxfrac, bellWidth);
 	}
 	
-	/* (non-Javadoc)
-	 * @see RationalPiano.VoiceManagement.IVoices#newVoice(int, double)
-	 */
+	@Override
 	public boolean newVoice(int midiNoteNumber, double velocity){
 		scheduledRemoveVoices.remove(midiNoteNumber); //only interesting when sustain=true
 		try{
@@ -89,9 +87,7 @@ public class Voices implements IVoices {
 		return true;
 	}
 	
-	/* (non-Javadoc)
-	 * @see RationalPiano.VoiceManagement.IVoices#releaseVoice(int)
-	 */
+	@Override
 	public boolean releaseVoice(int midiNoteNumber){
 		//the following line is not in the if branch because it would not release the voice when the voice was already faded out and after that the voice is released (only in holdSustain mode)
 		try{
@@ -117,6 +113,7 @@ public class Voices implements IVoices {
 	 * Increments the hold time for each voice which sets its internal value to a new one according to ADSR.
 	 * Also calculates the consonance anew.
 	 */
+	@Override
 	public void tick(){
 		OneVoice voice;
 		double velo;

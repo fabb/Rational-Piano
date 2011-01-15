@@ -36,20 +36,18 @@ public class NoteOutput implements INoteOutput {
 	 * @param midiOutputDevice PART of the name of the MIDI device to send the note messages to
 	 * @param midiChannel MIDI channel to send the note messages to; 0<=midiChannel<=15
 	 */
-	public NoteOutput(PApplet papplet, outputModes outputMode, int oscport, String midiDevice, int midiChannel) {
+	public NoteOutput(PApplet papplet, outputModes outputMode, int oscport, String midiOutputDevice, int midiChannel) {
 		if(outputMode == outputModes.OSC_ONLY || outputMode == outputModes.MIDI_AND_OSC ){
 			oscOn = true;
 			sendosc = new SendOsc(papplet, oscport);
 		}
 		if(outputMode == outputModes.MIDI_ONLY || outputMode == outputModes.MIDI_AND_OSC ){
 			midiOn = true;
-			sendmidi = new SendMidi(papplet, midiDevice, midiChannel);
+			sendmidi = new SendMidi(papplet, midiOutputDevice, midiChannel);
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see RationalPiano.NoteOut.INoteOutput#noteOn(int, double)
-	 */
+	@Override
 	public void noteOn(int midiNoteNumber, double velocity){
 		if(activeNotes.containsKey(midiNoteNumber)){
 			noteOff(midiNoteNumber); //note is already active, turn off before
@@ -65,9 +63,7 @@ public class NoteOutput implements INoteOutput {
 		}
 	}
 	
-	/* (non-Javadoc)
-	 * @see RationalPiano.NoteOut.INoteOutput#noteOff(int)
-	 */
+	@Override
 	public void noteOff(int midiNoteNumber){
 		if(!activeNotes.containsKey(midiNoteNumber)){
 			return; //note is not active, no need to turn it off
@@ -83,9 +79,7 @@ public class NoteOutput implements INoteOutput {
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see RationalPiano.NoteOut.INoteOutput#sustain(double)
-	 */
+	@Override
 	public void sustain(double sustain) {
 		if(oscOn == true){
 			sendosc.sustain(sustain);

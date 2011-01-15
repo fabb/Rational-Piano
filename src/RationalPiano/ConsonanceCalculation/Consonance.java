@@ -54,9 +54,6 @@ public class Consonance implements IConsonance {
 		initialize(notecount, maxfrac, bellWidth);
 	}
 	
-	/* (non-Javadoc)
-	 * @see RationalPiano.ConsonanceCalculation.IConsonance#calculate(java.util.HashMap)
-	 */
 	@Override
 	public HashMap<Integer, Double> calculate(HashMap<Integer,Double> voicesValues) {
 		//add up single dissonances and then invert 

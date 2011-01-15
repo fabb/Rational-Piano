@@ -29,8 +29,8 @@ public class SendMidi {
 	 * @param midiOutputDevice PART of the name of the MIDI device to send the note messages to.
 	 * @param midiChannel MIDI channel to send the note messages to; 0<=midiChannel<=15
 	 */
-	public SendMidi(PApplet papplet, String midiDevice, int midiChannel) {
-		logger.info("Setting up MIDI output on device '" + midiDevice + "' on channel " + midiChannel);
+	public SendMidi(PApplet papplet, String midiOutputDevice, int midiChannel) {
+		logger.info("Setting up MIDI output on device '" + midiOutputDevice + "' on channel " + midiChannel);
 		
 		this.papplet = papplet;
 		
@@ -42,11 +42,11 @@ public class SendMidi {
 		for(String device : devices){
 			logger.config("    " + device);
 		}
-		logger.config("Searching for MIDI Device containing string '" + midiDevice + "'");
+		logger.config("Searching for MIDI Device containing string '" + midiOutputDevice + "'");
 		
 		int i;
 		for(i=0; i<devices.length; i++){
-			if(devices[i].toLowerCase().contains(midiDevice.toLowerCase())){
+			if(devices[i].toLowerCase().contains(midiOutputDevice.toLowerCase())){
 				logger.config("MIDI Device chosen: '" + devices[i] + "'");
 				break;
 			}
@@ -63,6 +63,7 @@ public class SendMidi {
 	 * Close MIDI device when quitting.
 	 * FIXME won't get called - but actually it isn't needed either
 	 */
+	@Override
 	public void finalize(){
 		logger.info("Closing MIDI device");
 		output.closeMidi();

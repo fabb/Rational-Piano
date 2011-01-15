@@ -26,6 +26,7 @@ public interface IGraphicVisualizationElement extends IDrawable {
 	 * Draws the element with a shape and color gradient according to its volume.
 	 * @warning Changes papplet's color mode to HSB.
 	 */
+	@Override
 	public abstract void draw();
 
 }

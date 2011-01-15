@@ -59,9 +59,6 @@ public class GraphicNoteLineArray implements IGraphicVisualizationElementArray {
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see RationalPiano.Graphic.IGraphicVisualizationElementArray#getElementNote(int, int)
-	 */
 	@Override
 	public int getElementNote(int at_x, int at_y){
 		if(at_x < x_min || at_x > x_max || at_y < y_top || at_y > y_bottom){
@@ -84,17 +81,11 @@ public class GraphicNoteLineArray implements IGraphicVisualizationElementArray {
 		return midi_notestart + i-1;
 	}
 
-	/* (non-Javadoc)
-	 * @see RationalPiano.Graphic.IGraphicVisualizationElementArray#getLowestNote()
-	 */
 	@Override
 	public int getLowestNote(){
 		return midi_notestart;
 	}
 
-	/* (non-Javadoc)
-	 * @see RationalPiano.Graphic.IGraphicVisualizationElementArray#draw()
-	 */
 	@Override
 	public void draw() {
 		for(IGraphicVisualizationElement l : lines){
@@ -103,9 +94,6 @@ public class GraphicNoteLineArray implements IGraphicVisualizationElementArray {
 
 	}
 
-	/* (non-Javadoc)
-	 * @see RationalPiano.Graphic.IGraphicVisualizationElementArray#getElement(int)
-	 */
 	@Override
 	public IGraphicVisualizationElement getElement(int midiNoteNumber) {
 		if(midiNoteNumber - midi_notestart >= 0 && midiNoteNumber - midi_notestart < lines.size()){
@@ -115,9 +103,6 @@ public class GraphicNoteLineArray implements IGraphicVisualizationElementArray {
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see RationalPiano.Graphic.IGraphicVisualizationElementArray#getHighestNote()
-	 */
 	@Override
 	public int getHighestNote() {
 		return midi_notestart + lineCount - 1;

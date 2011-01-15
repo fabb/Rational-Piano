@@ -14,7 +14,6 @@
             <zipfileset excludes="META-INF/*.SF" src="lib/rwmidi.jar"/>
             <zipfileset excludes="META-INF/*.SF" src="lib/core.jar"/>
             <zipfileset excludes="META-INF/*.SF" src="lib/libTUIO.jar"/>
-            <zipfileset excludes="META-INF/*.SF" src="lib/TUIO.jar"/>
         </jar>
     </target>
 </project>
