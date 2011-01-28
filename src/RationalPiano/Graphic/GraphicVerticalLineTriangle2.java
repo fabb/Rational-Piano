@@ -79,21 +79,27 @@ public class GraphicVerticalLineTriangle2 implements IGraphicVisualizationElemen
 		papplet.text(String.valueOf(volume), x, y+height+10);
 		*/
 		
+		double v;
+		v = Math.pow(volume, bend);
+		//v = (Math.log(volume)/Math.log(2)) / 8 + 1;
+		//v = (v >= 0) ? v : 0;
+		//v = 0.5;
+		
+		//double compress = 1;//(1-v);
+		int offset = (int)(height * v);
+
 		for (int i = 0; i < halfwidth; i++) {
-			double v;
-			v = Math.pow(volume, bend);
-			//v = (Math.log(volume)/Math.log(2)) / 8 + 1;
-			//v = (v >= 0) ? v : 0;
-			//v = 0.5;
-			
 			setStrokeColor(i, v);
 			
-			//double compress = 1;//(1-v);
-			int offset = (int)(height * v);
 			int heightline = (int)(height * (1 - ((1-v) * i / halfwidth)));
 			
-			papplet.line(x-i, y+offset, x-i, y+heightline);
-			papplet.line(x+i, y+offset, x+i, y+heightline);
+			if(i == 0){
+				//papplet.line(x, y, x, y+2*heightline);
+				papplet.line(x, y+offset, x, y+heightline);
+			}else{
+				papplet.line(x-i, y+offset, x-i, y+heightline);
+				papplet.line(x+i, y+offset, x+i, y+heightline);
+			}
 		}
 	}
 	

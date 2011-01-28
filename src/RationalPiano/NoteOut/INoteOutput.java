@@ -5,11 +5,16 @@ package RationalPiano.NoteOut;
  * Allows to turn on/off notes/voices on a midi channel / osc port and to de/activate sustain
  * 
  * @author Fabian Ehrentraud
- * @date 2011-01-15
- * @version 1.0
+ * @date 2011-01-28
+ * @version 1.01
  * @licence Licensed under the Open Software License (OSL 3.0)
  */
 public interface INoteOutput {
+
+	/**
+	 * Possible modes of note message outputs: either only via MIDI, only via OSC or both
+	 */
+	public enum outputModes {MIDI_ONLY, OSC_ONLY, MIDI_AND_OSC, NO_OUTPUT}
 
 	/**
 	 * Turns on the given note via MIDI and/or OSC

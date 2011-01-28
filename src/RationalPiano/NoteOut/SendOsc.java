@@ -71,11 +71,14 @@ public class SendOsc {
 	 * @return The synoscopy voice number the midi note got associated with.
 	 */
 	private int useFreeVoice(int midiNoteNumber) {
-		if(activeVoices.contains(midiNoteNumber)){
-			//if the midi note number is already in the list, reuse the voice number - should not happen with properly working Voices class
-			int v = activeVoices.get(midiNoteNumber);
-			activeVoices.put(midiNoteNumber, v);
-			return v;
+		try{
+			if(activeVoices.contains(midiNoteNumber)){
+				//if the midi note number is already in the list, reuse the voice number - should not happen with properly working Voices class
+				int v = activeVoices.get(midiNoteNumber);
+				activeVoices.put(midiNoteNumber, v);
+				return v;
+			}
+		}catch(NullPointerException e){
 		}
 		for(int v=0; v < activeVoices.size()+1; v++){
 			if(activeVoices.containsKey(v)){

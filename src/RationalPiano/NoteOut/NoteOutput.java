@@ -9,17 +9,12 @@ import processing.core.*;
  * Allows to turn on/off notes/voices on a midi channel / osc port and to de/activate sustain
  * 
  * @author Fabian Ehrentraud
- * @date 2010-10-10
- * @version 1.05
+ * @date 2011-01-28
+ * @version 1.051
  * @licence Licensed under the Open Software License (OSL 3.0)
  */
 public class NoteOutput implements INoteOutput {
 
-	/**
-	 * Possible modes of note message outputs: either only via MIDI, only via OSC or both
-	 */
-	public enum outputModes {MIDI_ONLY, OSC_ONLY, MIDI_AND_OSC};
-	
 	private boolean oscOn = false;
 	private boolean midiOn = false;
 	

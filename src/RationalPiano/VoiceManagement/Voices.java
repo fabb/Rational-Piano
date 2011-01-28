@@ -14,8 +14,8 @@ import processing.core.PApplet;
  * Manages all active voices and provides functions to add/remove voices and to calculate the consonances of all keys in range which also sets the visual element strengthness
  * 
  * @author Fabian Ehrentraud
- * @date 2011-01-15
- * @version 1.1
+ * @date 2011-01-28
+ * @version 1.11
  * @licence Licensed under the Open Software License (OSL 3.0)
  */
 public class Voices implements IVoices {
@@ -72,19 +72,24 @@ public class Voices implements IVoices {
 	
 	@Override
 	public boolean newVoice(int midiNoteNumber, double velocity){
-		scheduledRemoveVoices.remove(midiNoteNumber); //only interesting when sustain=true
 		try{
+			scheduledRemoveVoices.remove(midiNoteNumber); //only interesting when sustain=true
 			graphiccontrols.getGraphicVisualizationElementArray().getElement(midiNoteNumber).setActive(true);
-		}catch(NullPointerException e){
-		}
 
-		if(activeVoices.keySet().contains(midiNoteNumber)){
-			double previousVolume = fade.getCurrentVelocity(activeVoices.get(midiNoteNumber));
-			activeVoices.get(midiNoteNumber).retrigger(velocity,previousVolume);
-		}else{
-			activeVoices.put(midiNoteNumber, new OneVoice(midiNoteNumber, velocity));
+			if(activeVoices.keySet().contains(midiNoteNumber)){
+				double previousVolume = fade.getCurrentVelocity(activeVoices.get(midiNoteNumber));
+				if(velocity < previousVolume){
+					//don't do a "downward attack", but rather keep the current level 
+					velocity = previousVolume;
+				}
+				activeVoices.get(midiNoteNumber).retrigger(velocity,previousVolume);
+			}else{
+				activeVoices.put(midiNoteNumber, new OneVoice(midiNoteNumber, velocity));
+			}
+			return true;
+		}catch(NullPointerException e){
+			return false;
 		}
-		return true;
 	}
 	
 	@Override
@@ -92,20 +97,21 @@ public class Voices implements IVoices {
 		//the following line is not in the if branch because it would not release the voice when the voice was already faded out and after that the voice is released (only in holdSustain mode)
 		try{
 			graphiccontrols.getGraphicVisualizationElementArray().getElement(midiNoteNumber).setActive(false);
-		}catch(NullPointerException e){
-		}
-		
-		if(activeVoices.keySet().contains(midiNoteNumber) && activeVoices.get(midiNoteNumber).isReleased() == false){
-			if(sustain == true){
-				scheduledRemoveVoices.add(midiNoteNumber);
-			}else{
-				activeVoices.get(midiNoteNumber).release();
+
+			if(activeVoices.keySet().contains(midiNoteNumber) && activeVoices.get(midiNoteNumber).isReleased() == false){
+				if(sustain == true){
+					scheduledRemoveVoices.add(midiNoteNumber);
+				}else{
+					activeVoices.get(midiNoteNumber).release();
+				}
+				
+				return true;
 			}
 			
-			return true;
+			return false;
+		}catch(NullPointerException e){
+			return false;
 		}
-		
-		return false;
 	}
 	
 	/**
@@ -120,7 +126,10 @@ public class Voices implements IVoices {
 		
 		if(sustain == false){
 			for(Integer midiNoteNumber : scheduledRemoveVoices){
-				activeVoices.get(midiNoteNumber).release();
+				try{
+					activeVoices.get(midiNoteNumber).release();
+				}catch(NullPointerException e){
+				}
 				scheduledRemoveVoices.remove(midiNoteNumber);
 			}
 		}
@@ -128,24 +137,27 @@ public class Voices implements IVoices {
 		//calculate current voice velocities
 		
 		for(Integer key : activeVoices.keySet()){
-			voice = activeVoices.get(key);
-			voice.incrementHoldtime();
-			velo = fade.getCurrentVelocity(voice);
-			if(velo <= 0){
-				activeVoices.remove(key);
-				
-				if(voicesValues.containsKey(key)){
-					voicesValues.remove(key);
+			try{
+				voice = activeVoices.get(key);
+				voice.incrementHoldtime();
+				velo = fade.getCurrentVelocity(voice);
+				if(velo <= 0){
+					activeVoices.remove(key);
+					
+					if(voicesValues.containsKey(key)){
+						voicesValues.remove(key);
+					}
+					
+					//graphiccontrols.setLineWidth(key, 0); //would set the line width to 0
+					
+					//graphiccontrols.setLineActive(key, false); //would visually release voice if adsr approaches 0
+					
+				}else{
+					voicesValues.put(key, velo);
+					
+					//graphiccontrols.setLineWidth(key, (int)(255*fade.getCurrentVelocity(voice))); //would set the line to the width according to its current adsr value
 				}
-				
-				//graphiccontrols.setLineWidth(key, 0); //would set the line width to 0
-
-				//graphiccontrols.setLineActive(key, false); //would visually release voice if adsr approaches 0
-
-			}else{
-				voicesValues.put(key, velo);
-				
-				//graphiccontrols.setLineWidth(key, (int)(255*fade.getCurrentVelocity(voice))); //would set the line to the width according to its current adsr value
+			}catch(NullPointerException e){
 			}
 		}
 

@@ -14,7 +14,7 @@ import java.util.NoSuchElementException;
 import java.util.Scanner;
 import java.util.logging.Logger;
 
-import RationalPiano.NoteOut.NoteOutput.outputModes;
+import RationalPiano.NoteOut.INoteOutput.outputModes;
 import RationalPiano.Persistence.Annotations.FieldDescription;
 import RationalPiano.Persistence.Annotations.FieldDoubleMinMax;
 import RationalPiano.Persistence.Annotations.FieldFloatMinMax;
@@ -35,11 +35,11 @@ public class ConfigurationData {
 	@FieldDescription(description="true = launch in fullscreen; false = launch in window; In full screen mode, the window width and height settings are ignored and the screen resolution is used instead")
 	public Boolean fullscreen = /**/true/*/false/**/;
 	
-	@FieldDescription(description="width of the applet window (only in windowed mode), values smaller than the screen width get cropped")
+	@FieldDescription(description="width of the applet window (only in windowed mode), values higher than the screen width get cropped")
 	@FieldIntegerMinMax(min=100, max=10000)
 	public Integer width = 1000;
 	
-	@FieldDescription(description="height of the applet window (only in windowed mode), values smaller than the screen height get cropped")
+	@FieldDescription(description="height of the applet window (only in windowed mode), values higher than the screen height get cropped")
 	@FieldIntegerMinMax(min=100, max=10000)
 	public Integer height = 500;
 	
@@ -60,17 +60,17 @@ public class ConfigurationData {
 	public Double lineBend = 0.25;
 	
 	@FieldDescription(description="one of several modes to select where to send the note messages to (MIDI and OSC)")
-	public outputModes outputMode = outputModes.MIDI_AND_OSC;
+	public outputModes outputMode = outputModes.NO_OUTPUT;
 	
 	@FieldDescription(description="UDP port to send OSC voice messages to")
 	@FieldIntegerMinMax(min=0, max=65535)
 	public Integer oscport = 12000;
 	
 	@FieldDescription(description="a part of the wanted midi output device's name where to send the note messages to")
-	public String midiOutputDevice = "Maple Midi Out: Port 4";
+	public String midiOutputDevice = "";
 	
 	@FieldDescription(description="a part of the wanted midi input device's name where to get note messages from")
-	public String midiInputDevice = "EDIROL PCR 1";
+	public String midiInputDevice = "Your MIDI IN Device";
 	
 	@FieldDescription(description="midi channel that should get used for the note messages")
 	@FieldIntegerMinMax(min=0, max=15)
@@ -82,11 +82,11 @@ public class ConfigurationData {
 	
 	@FieldDescription(description="decay time of held voices in seconds")
 	@FieldDoubleMinMax(min=0, max=60)
-	public Double decay = 0.5;
+	public Double decay = 4.0;
 	
 	@FieldDescription(description="sustain level (where the note visually stays after attack + decay) as a fraction of the initial velocity")
 	@FieldDoubleMinMax(min=0, max=1)
-	public Double sustain = 0.65;
+	public Double sustain = 0.0;
 	
 	@FieldDescription(description="release time of released voices in seconds")
 	@FieldDoubleMinMax(min=0, max=60)
