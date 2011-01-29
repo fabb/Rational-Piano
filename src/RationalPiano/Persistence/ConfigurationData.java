@@ -25,8 +25,8 @@ import RationalPiano.Persistence.Annotations.FieldIntegerMinMax;
  * Provides methods to read and write that configuration from/to a human readable text file.
  * 
  * @author Fabian Ehrentraud
- * @date 2010-09-24
- * @version 1.05
+ * @date 2011-01-29
+ * @version 1.051
  * @licence Licensed under the Open Software License (OSL 3.0)
  */
 public class ConfigurationData {
@@ -34,6 +34,10 @@ public class ConfigurationData {
 	//configuration data - no native types!! - must have default values!
 	@FieldDescription(description="true = launch in fullscreen; false = launch in window; In full screen mode, the window width and height settings are ignored and the screen resolution is used instead")
 	public Boolean fullscreen = /**/true/*/false/**/;
+	
+	@FieldDescription(description="Use the full width, but only the given fraction of the height of the full screen area, aligned to the bottom; Only taken account for in fullscreen mode")
+	@FieldDoubleMinMax(min=0, max=1)
+	public Double vertical_scaling = 1.;
 	
 	@FieldDescription(description="width of the applet window (only in windowed mode), values higher than the screen width get cropped")
 	@FieldIntegerMinMax(min=100, max=10000)

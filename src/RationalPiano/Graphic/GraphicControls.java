@@ -10,8 +10,8 @@ import processing.core.PConstants;
  * Provides methods to draw, change and question those objects
  * 
  * @author Fabian Ehrentraud
- * @date 2010-10-10
- * @version 1.02
+ * @date 2011-01-29
+ * @version 1.021
  * @licence Licensed under the Open Software License (OSL 3.0)
  */
 public class GraphicControls implements IGraphicControls {
@@ -32,6 +32,7 @@ public class GraphicControls implements IGraphicControls {
 	 * Initialize the drawing window and generate the controls
 	 * @param papplet The processing applet to draw the elements to
 	 * @param fullscreen Whether this PApplet runs in fullscreen mode. If true, width and height will get ignored and set to the screen size.
+	 * @param vertical_scaling Use this fraction of the full height for the visualization display; Only applicable if fullscreen==true; 0<=vertical_scaling<=1
 	 * @param width width of the window in pixels
 	 * @param height height of the window in pixels
 	 * @param framerate framerate of the window in frames per second
@@ -46,14 +47,15 @@ public class GraphicControls implements IGraphicControls {
 	 * @param lineColorSaturation Color saturation of the lines. 0<=lineColorSaturation<=255
 	 * @param lineColorBrightness Color brightness of the lines. 0<=lineColorBrightness<=255
 	 */
-	public GraphicControls(PApplet papplet, Boolean fullscreen, int width, int height, float framerate, int notecount, int notestart, double lineBend, int backgroundColorHue, int backgroundColorSaturation, int backgroundColorBrightness, int lineColorHueInactive, int lineColorHueActive, int lineColorSaturation, int lineColorBrightness) {
+	public GraphicControls(PApplet papplet, Boolean fullscreen, double vertical_scaling, int width, int height, float framerate, int notecount, int notestart, double lineBend, int backgroundColorHue, int backgroundColorSaturation, int backgroundColorBrightness, int lineColorHueInactive, int lineColorHueActive, int lineColorSaturation, int lineColorBrightness) {
 		this.papplet = papplet;
-		setup(fullscreen, width, height, framerate, notecount, notestart, lineBend, backgroundColorHue, backgroundColorSaturation, backgroundColorBrightness, lineColorHueInactive, lineColorHueActive, lineColorSaturation, lineColorBrightness);
+		setup(fullscreen, vertical_scaling, width, height, framerate, notecount, notestart, lineBend, backgroundColorHue, backgroundColorSaturation, backgroundColorBrightness, lineColorHueInactive, lineColorHueActive, lineColorSaturation, lineColorBrightness);
 	}
 	
 	/**
 	 * Initialize the drawing window and generate the controls
 	 * @param fullscreen Whether this PApplet runs in fullscreen mode. If true, width and height will get ignored and set to the screen size. 
+	 * @param vertical_scaling If only a smaller height should be used for the visualization display; Only applicable if fullscreen==true
 	 * @param width width of the window in pixels
 	 * @param height height of the window in pixels
 	 * @param framerate framerate of the window in frames per second
@@ -68,7 +70,7 @@ public class GraphicControls implements IGraphicControls {
 	 * @param lineColorSaturation Color saturation of the lines. 0<=lineColorSaturation<=255
 	 * @param lineColorBrightness Color brightness of the lines. 0<=lineColorBrightness<=255
 	 */
-	private void setup(Boolean fullscreen, int width, int height, float framerate, int notecount, int notestart, double lineBend, int backgroundColorHue, int backgroundColorSaturation, int backgroundColorBrightness, int lineColorHueInactive, int lineColorHueActive, int lineColorSaturation, int lineColorBrightness){
+	private void setup(Boolean fullscreen, double vertical_scaling, int width, int height, float framerate, int notecount, int notestart, double lineBend, int backgroundColorHue, int backgroundColorSaturation, int backgroundColorBrightness, int lineColorHueInactive, int lineColorHueActive, int lineColorSaturation, int lineColorBrightness){
 		if(fullscreen){
 			width = papplet.screenWidth;
 			height = papplet.screenHeight;
@@ -94,7 +96,17 @@ public class GraphicControls implements IGraphicControls {
 
 		//font = papplet.createFont("SanSerif", 12); //FIXME this takes ages as the system's font folder is being scanned
 		
-		graphiclines = new GraphicNoteLineArray(papplet, notecount, notestart, 0, papplet.width, 0, papplet.height, lineBend, lineColorHueInactive, lineColorHueActive, lineColorSaturation, lineColorBrightness);
+		int linearray_y_top;
+		
+		if(fullscreen){
+			linearray_y_top = (int)((1-vertical_scaling)*papplet.height);
+		}else{
+			linearray_y_top = 0;
+		}
+		
+		int linearray_y_bottom = papplet.height;
+		
+		graphiclines = new GraphicNoteLineArray(papplet, notecount, notestart, 0, papplet.width, linearray_y_top, linearray_y_bottom, lineBend, lineColorHueInactive, lineColorHueActive, lineColorSaturation, lineColorBrightness);
 		
 		//TODO generate parameter controls for live-tweaking parameters
 	}

@@ -23,6 +23,7 @@ public class GraphicControlsTest extends PApplet {
 	@Override
 	public void setup() {
 		boolean fullscreen = false;
+		double vertical_scaling = 1;
 		int width = 1024/88 * notecount;
 		//PApplet.println(width);
 		int height = 300;
@@ -36,7 +37,7 @@ public class GraphicControlsTest extends PApplet {
 		int lineColorSaturation = 255;
 		int lineColorBrightness = 255;
 		
-		graphiccontrols = new GraphicControls(this, fullscreen, width, height, framerate, notecount, notestart, lineBend, backgroundColorHue, backgroundColorSaturation, backgroundColorBrightness, lineColorHueInactive, lineColorHueActive, lineColorSaturation, lineColorBrightness);
+		graphiccontrols = new GraphicControls(this, fullscreen, vertical_scaling, width, height, framerate, notecount, notestart, lineBend, backgroundColorHue, backgroundColorSaturation, backgroundColorBrightness, lineColorHueInactive, lineColorHueActive, lineColorSaturation, lineColorBrightness);
 	}
 	
 	@Override
