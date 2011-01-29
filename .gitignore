@@ -1,5 +1,5 @@
 *.class
-#doc/javadoc
+doc/javadoc
 
 RationalPianoSettings.cfg
 
