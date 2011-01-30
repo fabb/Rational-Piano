@@ -18,8 +18,8 @@ import rwmidi.SysexMessage;
  * Translates presses to newVoice() and noteOn() and releases to releaseVoice() and noteOff().
  * 
  * @author Fabian Ehrentraud
- * @date 2010-09-24
- * @version 1.0
+ * @date 2011-01-30
+ * @version 1.1
  * @licence Licensed under the Open Software License (OSL 3.0)
  */
 public class InputMidi {
@@ -28,6 +28,8 @@ public class InputMidi {
 	private PApplet papplet;
 	private IVoices voices;
 	private INoteOutput noteoutput;
+	
+	private String chosenMidiInput;
 	
 	private static final Logger logger = Logger.getLogger(InputMidi.class.getName());
 
@@ -43,6 +45,28 @@ public class InputMidi {
 		this.voices = voices;
 		this.noteoutput = noteoutput;
 		
+		setMidiInputDevice(midiInputDevice);
+	}
+	
+	/**
+	 * @return The String names of all Midi Input Devices
+	 */
+	public String[] getMidiInputDevices(){
+		return RWMidi.getInputDeviceNames();
+	}
+	
+	/**
+	 * Sets the Midi Input Device to the given one.
+	 * This method gets automatically called upon construction, but can also be used to change the device later on.
+	 * @param midiInputDevice The partial and case-insensitive name of the MIDI Input device which should get opened.
+	 */
+	public void setMidiInputDevice(String midiInputDevice) {
+		try{
+			//close previously opened device
+			midiinput.closeMidi();
+		}catch(NullPointerException e){
+		}
+		
 		String devices[] = RWMidi.getInputDeviceNames();
 		
 		logger.config("Available MIDI Input Devices:");
@@ -55,19 +79,21 @@ public class InputMidi {
 		for(i=0; i<devices.length; i++){
 			if(devices[i].toLowerCase().contains(midiInputDevice.toLowerCase())){
 				logger.config("MIDI Device chosen: '" + devices[i] + "'");
+				chosenMidiInput = devices[i];
 				break;
 			}
 		}
 		if(i==devices.length){
 			i--;
 			logger.severe("MIDI Device not found, choosing last device: '" + devices[i] + "'");
+			chosenMidiInput = devices[i];
 		}
 
 		midiinput = RWMidi.getInputDevices()[i].createInput(); //FIXME exception can happen here but the library catches it (as it is a processing library) => modify library to throw the exeption
 		
 		midiinput.plug(this);
 	}
-	
+
 	/**
 	 * Handles incoming Note On messages.
 	 * Translates these calls to according method calls in the IVoices and INoteOutput objects.

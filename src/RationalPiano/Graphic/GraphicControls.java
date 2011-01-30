@@ -2,6 +2,8 @@ package RationalPiano.Graphic;
 
 import java.util.logging.Logger;
 
+import RationalPiano.Persistence.ConfigurationData;
+
 import processing.core.PApplet;
 import processing.core.PConstants;
 
@@ -24,13 +26,14 @@ public class GraphicControls implements IGraphicControls {
 	private int backgroundColorBrightness;
 
 	private IGraphicVisualizationElementArray graphiclines;
-	//private GraphicParameterControl graphicparametercontrols;
+	private IPropertyControl graphicparametercontrols;
 	
 	private static final Logger logger = Logger.getLogger(GraphicControls.class.getName());
 
 	/**
 	 * Initialize the drawing window and generate the controls
 	 * @param papplet The processing applet to draw the elements to
+	 * @param config The ConfigurationData object which allows tweaking and saving by the contained propery control object
 	 * @param fullscreen Whether this PApplet runs in fullscreen mode. If true, width and height will get ignored and set to the screen size.
 	 * @param vertical_scaling Use this fraction of the full height for the visualization display; Only applicable if fullscreen==true; 0<=vertical_scaling<=1
 	 * @param width width of the window in pixels
@@ -47,14 +50,15 @@ public class GraphicControls implements IGraphicControls {
 	 * @param lineColorSaturation Color saturation of the lines. 0<=lineColorSaturation<=255
 	 * @param lineColorBrightness Color brightness of the lines. 0<=lineColorBrightness<=255
 	 */
-	public GraphicControls(PApplet papplet, Boolean fullscreen, double vertical_scaling, int width, int height, float framerate, int notecount, int notestart, double lineBend, int backgroundColorHue, int backgroundColorSaturation, int backgroundColorBrightness, int lineColorHueInactive, int lineColorHueActive, int lineColorSaturation, int lineColorBrightness) {
+	public GraphicControls(PApplet papplet, ConfigurationData config, Boolean fullscreen, double vertical_scaling, int width, int height, float framerate, int notecount, int notestart, double lineBend, int backgroundColorHue, int backgroundColorSaturation, int backgroundColorBrightness, int lineColorHueInactive, int lineColorHueActive, int lineColorSaturation, int lineColorBrightness) {
 		this.papplet = papplet;
-		setup(fullscreen, vertical_scaling, width, height, framerate, notecount, notestart, lineBend, backgroundColorHue, backgroundColorSaturation, backgroundColorBrightness, lineColorHueInactive, lineColorHueActive, lineColorSaturation, lineColorBrightness);
+		setup(fullscreen, config, vertical_scaling, width, height, framerate, notecount, notestart, lineBend, backgroundColorHue, backgroundColorSaturation, backgroundColorBrightness, lineColorHueInactive, lineColorHueActive, lineColorSaturation, lineColorBrightness);
 	}
 	
 	/**
 	 * Initialize the drawing window and generate the controls
 	 * @param fullscreen Whether this PApplet runs in fullscreen mode. If true, width and height will get ignored and set to the screen size. 
+	 * @param config The ConfigurationData object which allows tweaking and saving by the contained propery control object
 	 * @param vertical_scaling If only a smaller height should be used for the visualization display; Only applicable if fullscreen==true
 	 * @param width width of the window in pixels
 	 * @param height height of the window in pixels
@@ -70,7 +74,7 @@ public class GraphicControls implements IGraphicControls {
 	 * @param lineColorSaturation Color saturation of the lines. 0<=lineColorSaturation<=255
 	 * @param lineColorBrightness Color brightness of the lines. 0<=lineColorBrightness<=255
 	 */
-	private void setup(Boolean fullscreen, double vertical_scaling, int width, int height, float framerate, int notecount, int notestart, double lineBend, int backgroundColorHue, int backgroundColorSaturation, int backgroundColorBrightness, int lineColorHueInactive, int lineColorHueActive, int lineColorSaturation, int lineColorBrightness){
+	private void setup(Boolean fullscreen, ConfigurationData config, double vertical_scaling, int width, int height, float framerate, int notecount, int notestart, double lineBend, int backgroundColorHue, int backgroundColorSaturation, int backgroundColorBrightness, int lineColorHueInactive, int lineColorHueActive, int lineColorSaturation, int lineColorBrightness){
 		if(fullscreen){
 			width = papplet.screenWidth;
 			height = papplet.screenHeight;
@@ -108,7 +112,7 @@ public class GraphicControls implements IGraphicControls {
 		
 		graphiclines = new GraphicNoteLineArray(papplet, notecount, notestart, 0, papplet.width, linearray_y_top, linearray_y_bottom, lineBend, lineColorHueInactive, lineColorHueActive, lineColorSaturation, lineColorBrightness);
 		
-		//TODO generate parameter controls for live-tweaking parameters
+		graphicparametercontrols = new PropertyControlP5(papplet,config);
 	}
 
 	@Override
@@ -131,7 +135,7 @@ public class GraphicControls implements IGraphicControls {
 		
 		graphiclines.draw();
 		
-		//TODO draw parameter controls
+		graphicparametercontrols.draw();
 	}
 
 	@Override
@@ -139,4 +143,14 @@ public class GraphicControls implements IGraphicControls {
 		return graphiclines;
 	}
 
+	@Override
+	public boolean isMouseOverGraphicVisualizationElementArray() {
+		//TODO this is actually not true when the GraphicVisualizationElementArray does not cover the whole screen, but as InputDevs catches this case already, this is good enough and working
+		return !(graphicparametercontrols.isMouseOver());
+	}
+
+	@Override
+	public IPropertyControl getParameterControl() {
+		return graphicparametercontrols;
+	}
 }

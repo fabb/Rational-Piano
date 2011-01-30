@@ -25,8 +25,8 @@ import RationalPiano.VoiceManagement.ITickable;
  * Serves all needed functions of PApplet and forwards such method calls to generated objects which are responsible for dedicated functions like input, note output, graphic controls and voice management.
  * 
  * @author Fabian Ehrentraud
- * @date 2011-01-29
- * @version 1.051
+ * @date 2011-01-30
+ * @version 1.06
  * @licence Licensed under the Open Software License (OSL 3.0)
  */
 public class RationalPiano extends PApplet {
@@ -91,7 +91,7 @@ public class RationalPiano extends PApplet {
 	@Override
 	public void setup() {
 		//take care which statements you put before size() or else the code in setup() gets executed twice
-		graphiccontrols = new GraphicControls(this, config.fullscreen, config.vertical_scaling, config.width, config.height, config.framerate, config.notecount, config.notestart, config.lineBend, config.backgroundColorHue, config.backgroundColorSaturation, config.backgroundColorBrightness, config.lineColorHueInactive, config.lineColorHueActive, config.lineColorSaturation, config.lineColorBrightness);
+		graphiccontrols = new GraphicControls(this, config, config.fullscreen, config.vertical_scaling, config.width, config.height, config.framerate, config.notecount, config.notestart, config.lineBend, config.backgroundColorHue, config.backgroundColorSaturation, config.backgroundColorBrightness, config.lineColorHueInactive, config.lineColorHueActive, config.lineColorSaturation, config.lineColorBrightness);
 		graphicdraw = graphiccontrols;
 
 		noteoutput = new NoteOutput(this, config.outputMode, config.oscport, config.midiOutputDevice, config.midiChannel);
@@ -102,6 +102,10 @@ public class RationalPiano extends PApplet {
 		input = new InputDevs(this, voices, noteoutput, graphiccontrols, config.tuioPort, config.midiInputDevice);
 		keyInput = input;
 		mouseInput = input;
+		
+		//TODO make configuration traversal more elaborate
+		graphiccontrols.getParameterControl().addInputMidi(input.getInputMidi());
+		graphiccontrols.getParameterControl().setListItems("midiInput", input.getInputMidi().getMidiInputDevices());
 		
 		logger.info("Ready");
 	}

@@ -37,7 +37,7 @@ public class GraphicControlsTest extends PApplet {
 		int lineColorSaturation = 255;
 		int lineColorBrightness = 255;
 		
-		graphiccontrols = new GraphicControls(this, fullscreen, vertical_scaling, width, height, framerate, notecount, notestart, lineBend, backgroundColorHue, backgroundColorSaturation, backgroundColorBrightness, lineColorHueInactive, lineColorHueActive, lineColorSaturation, lineColorBrightness);
+		graphiccontrols = new GraphicControls(this, null, fullscreen, vertical_scaling, width, height, framerate, notecount, notestart, lineBend, backgroundColorHue, backgroundColorSaturation, backgroundColorBrightness, lineColorHueInactive, lineColorHueActive, lineColorSaturation, lineColorBrightness);
 	}
 	
 	@Override

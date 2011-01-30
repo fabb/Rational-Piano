@@ -1,0 +1,3 @@
+This copyright notice is effective for the library file "controlP5.jar".
+
+It is part of the Processing Library controlP5 available at http://www.sojamo.de/libraries/controlP5/ and is licensed under the GNU LGPL http://www.opensource.org/licenses/lgpl-license.php.

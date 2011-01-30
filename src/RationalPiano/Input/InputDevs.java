@@ -12,8 +12,8 @@ import RationalPiano.VoiceManagement.IVoices;
  * Translates presses to newVoice() and noteOn() and releases to releaseVoice() and noteOff().
  * 
  * @author Fabian Ehrentraud
- * @date 2010-10-10
- * @version 1.01
+ * @date 2011-01-30
+ * @version 1.1
  * @licence Licensed under the Open Software License (OSL 3.0)
  */
 public class InputDevs implements IKeyInput, IMouseInput {
@@ -50,29 +50,34 @@ public class InputDevs implements IKeyInput, IMouseInput {
 	@Override
 	public void mousePressed(int mouseX, int mouseY, int mouseButton) {
 		//PApplet.println(mouseButton); //debug
-		if(lastMouseNote != -1){
-			return; //clicked another mouse button while one was still held down
-		}
 		
-		lastMouseNote = graphiccontrols.getGraphicVisualizationElementArray().getElementNote(mouseX,mouseY);
-		//lines.getLine(this.mouseX).volume((int)(Math.random()*255));
-		
-		if(lastMouseNote != -1){
-			noteoutput.noteOn(lastMouseNote, 1);
-			voices.newVoice(lastMouseNote, 1);
+		if(graphiccontrols.isMouseOverGraphicVisualizationElementArray()){
+			if(lastMouseNote != -1){
+				return; //clicked another mouse button while one was still held down
+			}
+			
+			lastMouseNote = graphiccontrols.getGraphicVisualizationElementArray().getElementNote(mouseX,mouseY);
+			//lines.getLine(this.mouseX).volume((int)(Math.random()*255));
+			
+			if(lastMouseNote != -1){
+				noteoutput.noteOn(lastMouseNote, 1);
+				voices.newVoice(lastMouseNote, 1);
+			}
 		}
 	}
 
 	@Override
 	public void mouseReleased(int mouseX, int mouseY, int mouseButton) {
-		//note_last = graphiccontrols.getLineNote(mouseX,mouseY); //not necessary as the last key is released
-		
-		if(lastMouseNote != -1){
-			noteoutput.noteOff(lastMouseNote);
-			voices.releaseVoice(lastMouseNote);
+		if(graphiccontrols.isMouseOverGraphicVisualizationElementArray()){
+			//note_last = graphiccontrols.getLineNote(mouseX,mouseY); //not necessary as the last key is released
+			
+			if(lastMouseNote != -1){
+				noteoutput.noteOff(lastMouseNote);
+				voices.releaseVoice(lastMouseNote);
+			}
+			
+			lastMouseNote = -1;
 		}
-		
-		lastMouseNote = -1;
 	}
 
 	@Override
@@ -193,5 +198,12 @@ public class InputDevs implements IKeyInput, IMouseInput {
 		default:
 			return -1;
 		}
+	}
+
+	/**
+	 * @return The InputMidi object which handles Midi Input.
+	 */
+	public InputMidi getInputMidi() {
+		return midiinput;
 	}
 }

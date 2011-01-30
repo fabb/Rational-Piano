@@ -37,7 +37,7 @@ public class ConfigurationData {
 	
 	@FieldDescription(description="Use the full width, but only the given fraction of the height of the full screen area, aligned to the bottom; Only taken account for in fullscreen mode")
 	@FieldDoubleMinMax(min=0, max=1)
-	public Double vertical_scaling = 1.;
+	public Double vertical_scaling = /**/1.0/*0.2/**/;
 	
 	@FieldDescription(description="width of the applet window (only in windowed mode), values higher than the screen width get cropped")
 	@FieldIntegerMinMax(min=100, max=10000)
@@ -74,7 +74,7 @@ public class ConfigurationData {
 	public String midiOutputDevice = "";
 	
 	@FieldDescription(description="a part of the wanted midi input device's name where to get note messages from")
-	public String midiInputDevice = "Your MIDI IN Device";
+	public String midiInputDevice = "";
 	
 	@FieldDescription(description="midi channel that should get used for the note messages")
 	@FieldIntegerMinMax(min=0, max=15)
@@ -139,6 +139,9 @@ public class ConfigurationData {
 	@FieldIntegerMinMax(min=0, max=255)
 	public Integer lineColorBrightness = 255;
 
+	
+	private String lastFileName = "";
+
 
 	private static final Logger logger = Logger.getLogger(ConfigurationData.class.getName());
 
@@ -168,6 +171,14 @@ public class ConfigurationData {
 			logger.severe("Couldn't write to file '" + fileName + "', error: " + ioe.toString());
 			//don't throw new Exception as this object wouldn't get created then
 		}
+	}
+	
+	/**
+	 * Saves configuration data to the last used file, only valid after saveData(String fileName) has been called before.
+	 * @throws IOException Thrown if either subfolders couldn't get created or writing to the file failed.
+	 */
+	public void saveData() throws IOException {
+		saveData(lastFileName);
 	}
 
 	/**
@@ -244,6 +255,8 @@ public class ConfigurationData {
 		}
 
 		out.close();
+		
+		lastFileName = fileName;
 	}
 	
 	/**
