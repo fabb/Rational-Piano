@@ -2,7 +2,7 @@ Welcome to the _*Rational Piano*_!
 
 The *license* can be found in the file "LICENSE.txt":http://github.com/fabb/Rational-Piano/raw/master/LICENSE.txt.
 
-The *documentation* can be found at "doc/RationalPiano.pdf":http://github.com/fabb/Rational-Piano/raw/master/doc/RationalPiano.pdf. It does not yet reflect the newest changes, see javadoc for that.
+The *documentation* can be found at "doc/RationalPiano.pdf":http://github.com/fabb/Rational-Piano/raw/master/doc/RationalPiano.pdf. It does not always reflect the newest changes, see javadoc for that.
 
 The *precompiled runtime* is called "RationalPiano.jar":http://github.com/fabb/Rational-Piano/raw/master/RationalPiano.jar.
 

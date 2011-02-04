@@ -71,7 +71,7 @@ public class ConfigurationData {
 	public Integer oscport = 12000;
 	
 	@FieldDescription(description="a part of the wanted midi output device's name where to send the note messages to")
-	public String midiOutputDevice = "";
+	public String midiOutputDevice = "java";
 	
 	@FieldDescription(description="a part of the wanted midi input device's name where to get note messages from")
 	public String midiInputDevice = "";

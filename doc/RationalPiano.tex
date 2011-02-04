@@ -1,7 +1,11 @@
-% Fabian Ehrentraud, 2010-08-05
+% Fabian Ehrentraud, 2011-02-03
 % Licensed under the Open Software License (OSL 3.0)
 
-\def\writedate {July 30, 2010}
+%TODO
+%fix capitalizations, spelling
+%reference to github + javadoc
+
+\def\writedate {February 04, 2011}
 
 \documentclass[12pt,a4paper,titlepage,oneside]{report}
 
@@ -26,37 +30,48 @@
 \chapter{Overview}
 \label{chap:overview}
 
-\begin{figure}[!ht]
-\includegraphics[width=\textwidth]{images/interface_active.png}
+\begin{figure}[htbp]
+\includegraphics[width=\textwidth]{images/interface_active2.png}
 \centering
-\caption{The Interface of Rational Piano in action}
+\caption{The interface of \emph{Rational Piano} in action}
 \label{fig:interface_active}
 \end{figure}
 
-\textit{Rational Piano} is a piano interface for TUIO \cite{bib:tuio} enabled multitouch tables. As shown in Fig.\ref{fig:interface_active} the interface is very basic. The application displays playable notes (or keys)\footnote{in the 12TET scale - other scales are planned, see chapter \ref{chap:future}} as vertical lines. Pressing and releasing those lines sends note messages via MIDI \cite{bib:midi} or OSC\footnote{with namespace SynOSCopy \cite{bib:synoscopyNamespace}} \cite{bib:osc} to external\footnote{external to the Rational Piano application, it can still run on the same computer} synthesizer applications. 
+\begin{figure}[htbp]
+\includegraphics[width=\textwidth]{images/interface_foto.jpg}
+\centering
+\caption{The interface of a \emph{Rational Piano} installation in action (but without the player)}
+\label{fig:interface_foto}
+\end{figure}
 
-For all displayed keys respectively, its \textit{consonance} \cite{bib:consonance} is displayed by a varying line width. Consonance expresses how well each key would fit to the played keys and is calculated in real time with the framerate. For an explanation of the thoughts and algorithms behind the consonance calculation, see chapter \ref{chap:consonance}. If you just want to start playing around instantly, you can skip to chapter \ref{chap:running}.
+\emph{Rational Piano} formerly was a piano interface for TUIO~\cite{bib:tuio} enabled multitouch tables. In the current further developed version, the focus was set on different input methods as the used multitouch system had some problems caused by the video input tracking making the system hard to use: high latency, missing pressure detection and also missing tactile feedback. To avoid these problems, now a conventional MIDI\footnote{\emph{MIDI} Wikipedia entry, \url{http://en.wikipedia.org/wiki/Midi}} keyboard is being used as input device.\footnote{TUIO input still is supported}
 
-The application was named "Rational Piano" because on the one hand, the consonance calculation is based on Rational Numbers and on the other hand, it provides a rational way for playing with melodies and harmonies.
+% Pressing and releasing those lines sends note messages via MIDI or OSC\footnote{with namespace SynOSCopy~\cite{bib:synoscopyNamespace}}~\cite{bib:osc} to external\footnote{external to the \emph{Rational Piano} application, it can still run on the same computer} synthesizer applications.
+
+The system calculates a visualization like shown in Fig.\ref{fig:interface_active} from the MIDI input. For each key on the keyboard\footnote{in the 12TET scale - other scales are planned}, a vertical line is displayed. For all of those lines respectively, the \emph{consonance}\footnote{\label{foot:cons}\emph{Consonance and Dissonance} Wikipedia entry, \url{http://en.wikipedia.org/wiki/Consonance_and_dissonance}} of its corresponding key is visualized by a continuously varying line width and height. Consonance expresses how well each key would fit to the played keys and is calculated in real time with the framerate. The \emph{lower} a line is, the better it should fit to the currently played (and recently released) notes. For an explanation of the thoughts and algorithms behind the consonance calculation, see Chapter~\ref{chap:consonance}. The visualization is optimized for being projected above the fingerboard with a beamer like shown in Fig.\ref{fig:interface_foto}. If you just want to start playing around instantly, you can skip to Chapter~\ref{chap:running}.
+
+\emph{Rational Piano} is open source, and can be found at \url{https://github.com/fabb/Rational-Piano}.
+
+The application was named ``Rational Piano'' because on the one hand, the consonance calculation is based on Rational Numbers and on the other hand, it provides a rational way for playing with melodies and harmonies.
 
 
 \section{Target Audience}
 
 This application is targeted at \textbf{Musical Novices}.
 
-Necessary thinking ballast should be reduced (which tone or chord fits now) and the coupling of the auditive and visual senses should get invigorated. It should be a helping tool to get a feeling for harmonious laws without the need to think about or even to understand the theories behind them. This is also what traditional learning methods aim at but with a higher entry step.
+\emph{Rational Piano} tries to encourage a musical novice to play with the piano instrument without forcing him into doing technical exercises. Rather, it provides an unobtrusive way to show the player harmonious connections while he is playing without the need for understanding the theories behind them. Necessary thinking ballast should be reduced (which tone or chord fits now) and the coupling of the auditive and visual senses should get invigorated. It should be a helping tool to get a feeling for harmonious laws without the need to think about or even to understand the theories behind them. This is also what traditional learning methods aim at but with a higher entry step.
 
 
 \section{Pictures}
 
-Most of the pictures in this document were drawn with Wolfram Mathematica\textregistered \cite{bib:mathematica}. The source is included in the file \textit{doc/images/images.nb}. The Interaction diagram in Fig.\ref{fig:interaction} was drawn with Dia \cite{bib:dia}, its source is available in file \textit{doc/images/control\_interaction.dia}.
+Most of the pictures in this document were drawn with Wolfram Mathematica\textregistered{}~\cite{bib:mathematica}. The source is included in the file \emph{doc/images/images.nb}. The Interaction diagram in Fig.\ref{fig:interaction} was drawn with Dia~\cite{bib:dia}, its source is available in file \emph{doc/images/control\_interaction.dia}.
 
 
 \section{License}
 
-Source Code, images and other original work including this documentation is licensed under the \textbf{Open Software License version 3.0} \cite{bib:osl}. The full license text also is available in file \textit{"LICENSE.txt"}.
+Source Code, images and other original work including this documentation is licensed under the \textbf{Open Software License version 3.0}~\cite{bib:osl}. The full license text also is available in file \emph{``LICENSE.txt''}.
 
-Libraries in the subfolder "lib" are licensed under the original licenses - for more information on these, see chapter \ref{sec:libdep}. 
+Libraries in the subfolder ``lib'' are licensed under the original licenses - for more information on these, see Chapter~\ref{sec:libdep}. 
 
 
 \chapter{Consonance and Dissonance}
@@ -64,30 +79,30 @@ Libraries in the subfolder "lib" are licensed under the original licenses - for 
 
 \section{The Concept}
 
-So what is consonance? There exist many different definitions \cite{bib:cons_diss}. Consonance expresses how well some sounds fit together. That is dependent of the single sounds' \textbf{base frequencies}, their \textbf{spectra} and also what the listener is \textbf{accustomed} to\footnote{and probably some other things too}. In this application only base frequencies are considered\footnote{If you are interested into spectrum considerations, look up the works of William Sethares \cite{bib:sethWiki, bib:adaptun}} as it is a good approximation for most harmonic spectra.
+So what is consonance? There exist many different definitions~\cite{bib:cons_diss}. Consonance expresses how well some sounds fit together. That is dependent of the single sounds' \textbf{base frequencies}, their \textbf{spectra} and also what the listener is \textbf{accustomed} to\footnote{and probably some other things too}. In this application only base frequencies are considered\footnote{If you are interested into spectrum considerations, look up the works of William Sethares~\cite{bib:sethWiki, bib:adaptun}} as it is a good approximation for most harmonic spectra.
 
 
-\subsection{Ratio of two Frequencies}
+\subsection{Ratio of Two Frequencies}
 
-You are probably familiar with the term \textit{Octave}. Imagine (or try out) playing a tone on an instrument like the piano and at the same time play the octave\footnote{In our western music system we most commonly use the \textit{Equal Temperament} \cite{bib:12tet} which divides one octave into 12 \textit{Semitones}, it is also called \textit{12TET}. So here the octave is 12 Semitones above any tone.} above. Fig.\ref{fig:keyboard_octave} shows playing an A with 440Hz plus its octave above with 880Hz. Playing that \textit{interval} sounds quite good.
+You are probably familiar with the term \emph{Octave}. Imagine (or try out) playing a tone on an instrument like the piano and at the same time play the octave\footnote{In our western music system we most commonly use the \emph{Equal Temperament}~\cite{bib:12tet} which divides one octave into 12 \emph{Semitones}, it is also called \emph{12TET}. So here the octave is 12 Semitones above any tone.} above. Fig.\ref{fig:keyboard_octave} shows playing an A with 440Hz plus its octave above with 880Hz. Playing that \emph{interval} sounds quite good.
 
 \begin{figure}[!ht]
 \includegraphics[width=0.5\textwidth]{images/keyboard_octave.png}
 \centering
-\caption{An \textit{Octave} played on a keyboard, base tone is an A with 440Hz}
+\caption{An \emph{Octave} played on a keyboard, base tone is an A with 440Hz}
 \label{fig:keyboard_octave}
 \end{figure}
 
-Now, in contrast, play the same first tone and as the second tone use one Semitone \textbf{below} the octave - that interval is called a \textit{Major Seventh}. Fig.\ref{fig:keyboard_major_seventh} shows the keys of that interval where again the lower key is an A with 440Hz and the upper key is a G sharp with (approximately) 825Hz\footnote{Which is a major seventh in Just Intonation \cite{bib:just}, in 12TET it is actually $440 \cdot 2^{\frac{11}{12}} = 830.609Hz$ which has not got a ratio as it is an irrational number, but we will get to this later}. It does not sound that good anymore\footnote{mileage may vary}, more \textbf{tensionful}, as if the two tones would \textbf{beat} each other.
+Now, in contrast, play the same first tone and as the second tone use one Semitone \textbf{below} the octave - that interval is called a \emph{Major Seventh}. Fig.\ref{fig:keyboard_major_seventh} shows the keys of that interval where again the lower key is an A with 440Hz and the upper key is a G sharp with (approximately) 825Hz\footnote{Which is a major seventh in Just Intonation~\cite{bib:just}, in 12TET it is actually $440 \cdot 2^{\frac{11}{12}} = 830.609Hz$ which has not got a ratio as it is an irrational number, but we will get to this later}. It does not sound that good anymore\footnote{mileage may vary}, more \textbf{tensionful}, as if the two tones would \textbf{beat} each other.
 
 \begin{figure}[!ht]
 \includegraphics[width=0.5\textwidth]{images/keyboard_major_seventh.png}
 \centering
-\caption{The interval \textit{Major Seventh} played on a keyboard, base tone is an A with 440Hz}
+\caption{The interval \emph{Major Seventh} played on a keyboard, base tone is an A with 440Hz}
 \label{fig:keyboard_major_seventh}
 \end{figure}
 
-So why is that? The (upper) octave of a tone has double its base frequency. So if the lower tone has the (base) frequency $f_{lower}$ and the upper tone has the (base) frequency $f_{higher}$, the simple mathematical relationship is $f_{higher} = 2 \cdot f_{lower}$. The \textit{ratio} of the frequencies is $\frac{f_{higher}}{f_{lower}} = \frac{880Hz}{440Hz} = \frac{2}{1}$. The exact frequencies are of no concern\footnote{as long as we stay in the human hearing range} as they shorten out in the fraction, only the shortened ratio of the frequencies is important. Looking at Fig.\ref{fig:sine_octave} one can see that the two base frequencies "meet again" very soon, this fact corrensponds to the low ratio of the frequencies.
+So why is that? The (upper) octave of a tone has double its base frequency. So if the lower tone has the (base) frequency $f_{lower}$ and the upper tone has the (base) frequency $f_{higher}$, the simple mathematical relationship is $f_{higher} = 2 \cdot f_{lower}$. The \emph{ratio} of the frequencies is $\frac{f_{higher}}{f_{lower}} = \frac{880Hz}{440Hz} = \frac{2}{1}$. The exact frequencies are of no concern\footnote{as long as we stay in the human hearing range} as they shorten out in the fraction, only the shortened ratio of the frequencies is important. Looking at Fig.\ref{fig:sine_octave} one can see that the two base frequencies ``meet again'' (are in phase) very soon, this fact corrensponds to the low ratio of the frequencies.
 
 \begin{figure}[!ht]
 \includegraphics[width=\textwidth]{images/sine_octave.png}
@@ -96,7 +111,7 @@ So why is that? The (upper) octave of a tone has double its base frequency. So i
 \label{fig:sine_octave}
 \end{figure}
 
-Now we look at the second example with the Major Seventh. Here the mathematical relation is $\frac{f_{higher}}{f_{lower}} = \frac{825Hz}{440Hz} = \frac{15}{8}$. In Fig.\ref{fig:sine_major_seventh} one can see that it takes some more cycles for the two base frequencies to "meet again", compared to the octave, which corrensponds to the higher ratio of the frequencies.
+Now we look at the second example with the Major Seventh. Here the mathematical relation is $\frac{f_{higher}}{f_{lower}} = \frac{825Hz}{440Hz} = \frac{15}{8}$. In Fig.\ref{fig:sine_major_seventh} one can see that it takes some more cycles for the two base frequencies to ``meet again'' (get in phase), compared to the octave, which corrensponds to the higher ratio of the frequencies.
 
 \begin{figure}[!ht]
 \includegraphics[width=\textwidth]{images/sine_major_seventh.png}
@@ -105,16 +120,16 @@ Now we look at the second example with the Major Seventh. Here the mathematical 
 \label{fig:sine_major_seventh}
 \end{figure}
 
-Comparing those two fractions and more of other intervals shown in Table \ref{tab:intervals}, one can see that fractions composed of a \textbf{low numerator and denominator} expresses a \textbf{more consonant interval} than a fraction that is composed of a high numerator and/or denominator\footnote{This observation was already made by many, among them Pythagoras \cite{bib:cons_diss}}. So the lower the result of the \textbf{multiplication of the numerator with the denominator}, the higher the consonance, or in other terms, the lower the dissonance\footnote{Dissonance in this context is used as anti-Consonance, or mathematically $Consonance = \frac{1}{Dissonance}$}.
+Comparing those two fractions and more of other intervals shown in Table~\ref{tab:intervals}, one can see that fractions composed of a \textbf{low numerator and denominator} expresses a \textbf{more consonant interval} than a fraction that is composed of a high numerator and/or denominator\footnote{This observation was already made by many, among them Pythagoras~\cite{bib:cons_diss}}. So the lower the result of the \textbf{multiplication of the numerator with the denominator}, the higher the consonance, or in other terms, the lower the dissonance\footnote{Dissonance in this context is used as anti-Consonance, or mathematically $Consonance = \frac{1}{Dissonance}$}.
 
 \noindent
 \framebox{
 \parbox[][][l]{\textwidth}{
-To quantify that mathematically, we can say that $Dissonance(\frac{n}{d}) := n \cdot d$ of the \textbf{shortened} fraction $\frac{n}{d}$, so the \textit{Greatest Common Divisor} of the numerator and denominator is 1: $GCD(n,d) = 1$.
+To quantify that mathematically, we can say that $Dissonance(\frac{n}{d}) := n \cdot d$ of the \textbf{shortened} fraction $\frac{n}{d}$, so the \emph{Greatest Common Divisor} of the numerator and denominator is 1: $GCD(n,d) = 1$.
 }
 }
 
-This function is \textit{commutative} as the multiplication is commutative: $Dissonance(\frac{n}{d}) = n \cdot d = d \cdot n = Dissonance(\frac{d}{n})$.
+This function is \emph{commutative} as the multiplication is commutative: $Dissonance(\frac{n}{d}) = n \cdot d = d \cdot n = Dissonance(\frac{d}{n})$.
 
 As all interesting numerator and denominator values are positive and non-zero, the result of the Dissonance fuction will always be at least one. As $Consonance = \frac{1}{Dissonance}$, the result of the Consonance function will always lie between 0 and 1.
 
@@ -145,9 +160,9 @@ Number of Semitones & Interval Name  &	Just Intonation & Equal Temperament   \\ 
 
 \subsection{Inexact Fractions}
 %TODO more clear wording
-While working with rational numbers now seems easy, we have got a \textbf{problem} when working with ratios of the Equal Temperament. As you can see in Table \ref{tab:intervals}, its tones' ratios consist of roots of the number two. All of those (exept to octaves) are \textit{Irrational Numbers} that have got \textbf{no fractional representation}. That means if we have given any two frequencies that have no rational ratio, in the mathematic sense, we can not calculate the consonance.
+While working with rational numbers now seems easy, we have got a \textbf{problem} when working with ratios of the Equal Temperament. As you can see in Table~\ref{tab:intervals}, its tones' ratios consist of roots of the number two. All of those (exept to octaves) are \emph{Irrational Numbers} that have got \textbf{no fractional representation}. That means if we have given any two frequencies that have no rational ratio, in the mathematic sense, we can not calculate the consonance.
 
-Even with perfect ratios, there is a \textbf{problem}: if there are two tones playing with a ratio that has got a high numerator and denominator, and therefore a high dissonance, it still could be that the interval sounds consonant. That is the case if there is a nearby fraction with a low numerator and denominator. As you can see in Fig.\ref{fig:enharmonic}, the two ratios are just (approximately) 1 \textit{Cent}\footnote{1 Cent equals the ratio $2^{\frac{1}{1200}}$ \cite{bib:cent}.} apart, which is the lower bound of hearing difference of the human's ear, meaning the \textbf{two ratios cannot be distinguished} even though their dissonances differ about many orders of magnitude.
+Even with perfect ratios, there is a \textbf{problem}: if there are two tones playing with a ratio that has got a high numerator and denominator, and therefore a high dissonance, it still could be that the interval sounds consonant. That is the case if there is a nearby fraction with a low numerator and denominator. As you can see in Fig.\ref{fig:enharmonic}, the two ratios are just (approximately) 1 \emph{Cent}\footnote{1 Cent equals the ratio $2^{\frac{1}{1200}}$~\cite{bib:cent}.} apart, which is the lower bound of hearing difference of the human's ear, meaning the \textbf{two ratios cannot be distinguished} even though their dissonances differ about many orders of magnitude.
 
 \noindent
 \framebox{
@@ -165,18 +180,18 @@ But the farther apart, the less good it sounds.
 \label{fig:enharmonic}
 \end{figure}
 
-To both fill the "irrational holes" and take proximate and more consonant fractions into consideration, each fraction gets "fuzzified" by a \textit{Gaussian Bell Curve} like shown in Fig.\ref{fig:bellcurve} \cite{bib:bell}. In Fig.\ref{fig:just_bell} you can see all ratios from Just Intonation with a bell curve around them. Note that the left half of the figure was added by taking the inverse of every ratio. You can see that consonance calculation of a ratio is a commutative function as it is symmetric.
+To both fill the ``irrational holes'' and take proximate and more consonant fractions into consideration, each fraction gets ``fuzzified'' by a \emph{Gaussian Bell Curve} like shown in Fig.\ref{fig:bellcurve}~\cite{bib:bell}. In Fig.\ref{fig:just_bell} you can see all ratios from Just Intonation with a bell curve around them. Note that the left half of the figure was added by taking the inverse of every ratio. You can see that consonance calculation of a ratio is a commutative function as it is symmetric.
 
 \begin{figure}[!ht]
 \includegraphics[width=\textwidth]{images/just_bell.png}
 \centering
-\caption{The "fuzzified" Ratios of Just Intonation from Table \ref{tab:intervals}, note that there was added an octave below by taking the inverse of each fraction}
+\caption{The ``fuzzified'' Ratios of Just Intonation from Table~\ref{tab:intervals}, note that there was added an octave below by taking the inverse of each fraction}
 \label{fig:just_bell}
 \end{figure}
 
 To get the heard fraction for any given (maybe irrational) ratio, the maximum consonance of every point on the ratio axis is taken like seen in Fig.\ref{fig:just_bell_max}.
 
-To get the \textit{Semitone Difference} between two tones, the formula $12 \cdot log_2(\frac{f_1}{f_2})$ is used\footnote{Later, when calculating the consonances, the absolute value will be taken as the curve is symmetric and only one side is needed}.
+To get the \emph{Semitone Difference} between two tones, the formula $12 \cdot log_2(\frac{f_1}{f_2})$ is used\footnote{Later, when calculating the consonances, the absolute value will be taken as the curve is symmetric and only one side is needed}.
 
 \begin{figure}[!ht]
 \includegraphics[width=\textwidth]{images/just_bell_max.png}
@@ -194,14 +209,14 @@ But there are more interesting (meaning more consonant) fractions than those in 
 
 According to the formula 
 \[Dissonance(\frac{n}{d}) = n \cdot d : GCD(n,d) = 1\]
-there exists at least one fraction for \textbf{any integer value} of the Dissonance function. We are only interested in positive non-zero results (and numerators and denominators) as negative, zero and infinite frequency values do not make much sense\footnote{here}. The first few Dissonance values with their according fractions are listed in Table \ref{tab:dissonances}.
+there exists at least one fraction for \textbf{any integer value} of the Dissonance function. We are only interested in positive non-zero results (and numerators and denominators) as negative, zero and infinite frequency values do not make much sense\footnote{here}. The first few Dissonance values with their according fractions are listed in Table~\ref{tab:dissonances}.
 
 \begin{table}[ht]
 \renewcommand*\arraystretch{1.5}
 \centering
 \begin{tabular}{| l | l |}
 \hline%XXXtable width and first row height
-\parbox[][][l]{0.5\textwidth}{Dissonance Value \\ and its prime factorization} & \parbox[][][l]{0.5\textwidth}{Shortened Fractions \\ and their prime factorizations} \\ \hline
+\parbox[][][l]{0.5\textwidth}{\vspace{5pt} Dissonance Value \\ and its prime factorization \vspace{5pt}} & \parbox[][][l]{0.5\textwidth}{\vspace{5pt} Shortened Fractions \\ and their prime factorizations \vspace{5pt}} \\ \hline
 $1$                                          & $\frac{1}{1}$                                      \\ \hline
 $2$                                          & $\frac{2}{1}$, $\frac{1}{2}$                       \\ \hline
 $3$                                          & $\frac{3}{1}$, $\frac{1}{3}$                       \\ \hline
@@ -219,9 +234,9 @@ $12 = 2^2 \cdot 3$                           & $\frac{12}{1}$ = $\frac{2^2 \cdot
 \label{tab:dissonances}
 \end{table}
 
-Examining the shortened fractions and their prime factorizations \cite{bib:factorization}, one can see that all prime facors of the Dissonance value are distributed on each side of the fraction bar. Each prime factor stays with its powers, e.g. a $3^2$ will be placed either in the numerator or the denominator, but it will not get torn apart into $\frac{3 \cdot x}{3 \cdot y}$ as that would shorten out and lead to a lower Dissonance value\footnote{that has already been covered by the emerging algorithm}. For the prime factors of the Dissonance value, \textit{all possibilities} of putting its prime factors on the left or right side of the fraction bar are exploited.
+Examining the shortened fractions and their prime factorizations~\cite{bib:factorization}, one can see that all prime facors of the Dissonance value are distributed on each side of the fraction bar. Each prime factor stays with its powers, e.g. a $3^2$ will be placed either in the numerator or the denominator, but it will not get torn apart into $\frac{3 \cdot x}{3 \cdot y}$ as that would shorten out and lead to a lower Dissonance value\footnote{that has already been covered by the emerging algorithm}. For the prime factors of the Dissonance value, \emph{all possibilities} of putting its prime factors on the left or right side of the fraction bar are exploited.
 
-That way, given a maximum wanted Dissonance value\footnote{called \textit{maxfrac} in the settings of Rational Piano \ref{sec:ADSR}}, we can calculate all fractions that are more consonant than this. In Fig.\ref{fig:maxfrac_fractions}, all fractions with a Dissonance value lower or equal to \textit{157} are shown. As the numbers collide a lot, Fig.\ref{fig:maxfrac_fractions_log} shows the same fractions in a logarithmical measure.
+That way, given a maximum wanted Dissonance value\footnote{called \emph{maxfrac} in the settings of Rational Piano~\ref{sec:ADSR}}, we can calculate all fractions that are more consonant than this. In Fig.\ref{fig:maxfrac_fractions}, all fractions with a Dissonance value lower or equal to \emph{157} are shown. As the numbers collide a lot, Fig.\ref{fig:maxfrac_fractions_log} shows the same fractions in a logarithmical measure.
 
 \begin{figure}[!ht]
 \includegraphics[width=\textwidth]{images/maxfrac_fractions.png}
@@ -239,9 +254,9 @@ That way, given a maximum wanted Dissonance value\footnote{called \textit{maxfra
 
 As we have noticed earlier, the Dissonance Function is commutative, thus we can ignore the left side of the plot when we take the absolute value of the semitone difference instead.
 
-In the same way as in the last section, we can now "fuzzify" each fraction with a bell curve and then, for each point on the ratio axis, calculate the maximum consonance. Fig.\ref{fig:maxfrac_maxbell} shows the result and Fig.\ref{fig:maxfrac_maxbell_log} the same with a logarithmical measure. Both only show a part of the the right half of the full range.
+In the same way as in the last section, we can now ``fuzzify'' each fraction with a bell curve and then, for each point on the ratio axis, calculate the maximum consonance. Fig.\ref{fig:maxfrac_maxbell} shows the result and Fig.\ref{fig:maxfrac_maxbell_log} the same with a logarithmical measure. Both only show a part of the the right half of the full range.
 
-The \textit{Harmonic Entropy Model} \cite{bib:harmonic_entropy} is based on similar thoughts and leads to a very similar figure.
+The \emph{Harmonic Entropy Model}~\cite{bib:harmonic_entropy} is based on similar thoughts and leads to a very similar figure.
 
 \begin{figure}[!ht]
 \includegraphics[width=\textwidth]{images/maxfrac_maxbell.png}
@@ -268,9 +283,20 @@ $ %TODO fix visual appearance
 The logarithm translates the frequency ratio to a semitone difference.
 
 
-\subsection{Taking account for the Tones' Volumes}
+\smallskip
+\smallskip
+\noindent
+\framebox{
+\parbox[][][l]{\textwidth}{
+Calculating the ratio which has its maximum for each step of equal temperament within the first octave leads to an interesting result: it is exactly the corresponding interval in just intonation seen in Table~\ref{tab:intervals} in the same row respectively. The calculation is left out as it would go beyond the scope of this bachelor's thesis.
+}
+}
+\smallskip
 
-With the calculated curves from the previous section, it is possible to calculate the consonance of any two frequencies \textbf{with the same volumes}. To grasp why this is, imagine two very dissonant tones playing with the same volume. When one of the two gets quieter and the other stays at its volume level, the perceived dissonance vanishes as the quieter tone does not "disturb" the louder one anymore.
+
+\subsection{Taking Account for the Tones' Volumes}
+
+With the calculated curves from the previous section, it is possible to calculate the consonance of any two frequencies \textbf{with the same volumes}. To grasp why this is, imagine two very dissonant tones playing with the same volume. When one of the two gets quieter and the other stays at its volume level, the perceived dissonance vanishes as the quieter tone does not ``disturb'' the louder one anymore.
 
 Assuming the tone's volumes are in the range $[0,1]$\footnote{For real tones, there is no upper limit on the volume, but for the calculation stated here, they would have to get cropped or scaled.}, we can multiply the calculated Dissonance value with the two volumes which makes it smaller and thus makes the Consonance value bigger:
 
@@ -286,7 +312,7 @@ If we want to know how a not yet playing frequency would fit to a playing one, w
 %TODO more visual explaination
 
 
-\subsection{Chords consisting of more than two Tones}
+\subsection{Chords Consisting of More Than Two Tones}
 
 Now it gets interesting as just the last brick is missing. If there are several tones playing and we want to calculate the Dissonance of any $frequency_{wanted}$ with $volume_{wanted}$, the single dissonances with the playing tones are simply added up: 
 
@@ -308,50 +334,50 @@ That is it. That is all behind the Consonance calculation in Rational Piano. Wel
 \section{The Computation}
 \label{sec:computation}
 
-The whole consonance calculation takes place in the source file \textit{src/RationalPiano/ConsonanceCalculation/Consonance.java}.
+The whole consonance calculation takes place in the source file \emph{src/RationalPiano/ConsonanceCalculation/Consonance.java}.
 
 %TODO source code listings or at least method references
 
-\textbf{Note:} You might also want to have a look at the Mathematica\textregistered notebook \textit{doc/images/images.nb} which contains the consonance curve calculation, used for the images in this document, in a functional programming style. The following algorithm description is based on the Java version.
+\textbf{Note:} You might also want to have a look at the Mathematica\textregistered{} notebook \emph{doc/images/images.nb} which contains the consonance curve calculation, used for the images in this document, in a functional programming style. The following algorithm description is based on the Java version.
 
 At the initialization phase, the dissonance curve gets calculated and in realtime, the dissonances of the active voices get added up for every key.
 
 
 \subsection{Initialization Phase}
 
-When the object \textit{Consonance} gets constructed, all prime factorizations up to the maximum wanted dissonance get calculated, then all possibilities of distributing them on both sides of the fraction bar are iterated and finally the minimum dissonance for each semitone-difference\footnote{In this version of Rational Piano, the 12TET scale is used. This means we have fixed frequencies for which we can calculate the ratio (semitone difference) for.} is calculated from the "bellified" fractions.
+When the object \emph{Consonance} gets constructed, all prime factorizations up to the maximum wanted dissonance get calculated, then all possibilities of distributing them on both sides of the fraction bar are iterated and finally the minimum dissonance for each semitone-difference\footnote{In this version of Rational Piano, the 12TET scale is used. This means we have fixed frequencies for which we can calculate the ratio (semitone difference) for.} is calculated from the ``bellified'' fractions.
 
 Parameters are:
 \begin{enumerate}
-	\item the note range \textit{notecount} to consider, this is the maximum semitone difference,
-	\item the maximum dissonance value \textit{maxfrac} to calculate the factorization for,
-	\item and the width \textit{bellWidth} of the Gaussian bell curve with that each fraction should get approximated.
+	\item the note range \emph{notecount} to consider, this is the maximum semitone difference,
+	\item the maximum dissonance value \emph{maxfrac} to calculate the factorization for,
+	\item and the width \emph{bellWidth} of the Gaussian bell curve with that each fraction should get approximated.
 \end{enumerate}
 
 
 \subsubsection{Prime Factorizations}
 
-To calculate prime factorizations, we need primes first. Those are calculated up to the value \textit{maxfrac} as this is the maximum we could possibly need. As we need all primes, they can be calculated incrementally from 2 to \textit{maxfrac}. That means each tested integer does not have to be divided by every lower integer, but only by every lower prime that has been found.
+To calculate prime factorizations, we need primes first. Those are calculated up to the value \emph{maxfrac} as this is the maximum we could possibly need. As we need all primes, they can be calculated incrementally from 2 to \emph{maxfrac}. That means each tested integer does not have to be divided by every lower integer, but only by every lower prime that has been found.
 
-After we have got the prime numbers, the combined factorizations can get calculated. That also happens incrementally for every integer from 1 to \textit{maxfrac} separately.
+After we have got the prime numbers, the combined factorizations can get calculated. That also happens incrementally for every integer from 1 to \emph{maxfrac} separately.
 
-\textbf{Note:} "Combined Factorizations" means that all prime factors of the single primes get multiplied back together again, that means instead of returning $[2,2,3,3,5]$, the algorithm returns $[4,9,5]$.
+\textbf{Note:} ``Combined Factorizations'' means that all prime factors of the single primes get multiplied back together again, that means instead of returning $[2,2,3,3,5]$, the algorithm returns $[4,9,5]$.
 
 The factorization algorithm tries to divide the wanted integer by all primes and keeps the factors that have no remainder.
 
-The result is a list of factorization lists for every integer up to \textit{maxfrac}.
+The result is a list of factorization lists for every integer up to \emph{maxfrac}.
 
 
 \subsubsection{Sublists}
 
 Now, all possibilities of putting the combined prime factors on each side of the fraction bar are iterated. This happens for every factorization list of integers contained in the list separately.
 
-The distribution iteration works with a trick: An integer is used where a binary position denotes one of the combined fractions of the given factorization. Not all binary positions are needed. So the algorithm just walks through all numbers from 0 to $1 << count(combined\_fractions)$. For each number, all used binary digits get examined: if it is 1, the combined fraction corresponding with that digit gets multiplied with the numerator; it it is 0, with the denominator. That way all possible fractions get calculated and stored as a \textit{Rational} in a list.
+The distribution iteration works with a trick: An integer is used where a binary position denotes one of the combined fractions of the given factorization. Not all binary positions are needed. So the algorithm just walks through all numbers from 0 to $1 << count(combined\_fractions)$. For each number, all used binary digits get examined: if it is 1, the combined fraction corresponding with that digit gets multiplied with the numerator; it it is 0, with the denominator. That way all possible fractions get calculated and stored as a \emph{Rational} in a list.
 
 \textbf{Note:} It is necessary for the integer to have at least as much binary digits as there are combined fractions in the list. There is no reason for concern here as the first whole number that has got more combined prime factors than 32 is the multiplication of the first 32 primes and that is a lot bigger than the maximum 32 bit integer: $525896479052627740771371797072411912900610967452630$.
 
 
-\subsubsection{Calculate Minimum Dissonance for each Note}
+\subsubsection{Calculate Minimum Dissonance for Each Note}
 
 The last initialization step is to calculate the minimum dissonance for each semitone-difference in the note range.
 
@@ -359,14 +385,14 @@ For each semitone-difference\footnote{which is an absolute value}, all Rationals
 
 The result is a list where on position 0, the dissonance value for a ratio with the semitone difference of 0 is stored; on position 1 the dissonance value for a semitone difference of 1, and so on.
 
-\textbf{Note:} By doing that step, only ratios with full semitone-differences can get taken into consideration. For other scales than 12TET, many more ratios have to get considered. When aiming at a \textit{Continuous Scale} (see Chapter \ref{chap:future}), there are no ratios that can be precalculated.
+\textbf{Note:} By doing that step, only ratios with full semitone-differences can get taken into consideration. For other scales than 12TET, many more ratios have to get considered. When aiming at a \emph{Continuous Scale} (see Chapter~\ref{chap:future}), there are no ratios that can be precalculated.
 
 
 \subsection{Realtime Consonance Calculation}
 
-There is not much left to do in realtime. The consonance calculation function gets a list with all active voices (keys) and their volumes. Then it walks through all \textit{output} keys in the note range - that are those that are not yet playing and we want to know the consonance for - and adds up the dissonances of the active keys which it derives from the key distance and the according value in the dissonance list and the volume of that voice.
+There is not much left to do in realtime. The consonance calculation function gets a list with all active voices (keys) and their volumes. Then it walks through all \emph{output} keys in the note range - that are those that are not yet playing and we want to know the consonance for - and adds up the dissonances of the active keys which it derives from the key distance and the according value in the dissonance list and the volume of that voice.
 
-The result for each \textit{output} key is incremented by 1 to make sure that the dissonance value is greater or equal to 1, and then it is inverted to retrieve consonance.
+The result for each \emph{output} key is incremented by 1 to make sure that the dissonance value is greater or equal to 1, and then it is inverted to retrieve consonance.
 
 And that is how it works!
 
@@ -378,33 +404,35 @@ The Application should run on Windows, Linux and OSX but it was only tested on W
 \noindent
 \textbf{Additional Requirements:}
 \begin{itemize}
-\item At first you will need a \textit{\textit{Java Runtime Environment 1.6}} or later (1.5 will probably work, too) \cite{bib:java}.
-\item You will also need a \textit{virtual MIDI cable} if you are using MIDI and not SynOSCopy. See Section \ref{sec:output} for details.
-\item As this application just generates note output but no sound, you will also need a \textit{Synthesizer} understanding MIDI or SynOSCopy. See Section \ref{sec:output} for more info.
-\item Also you will need \textit{CCV (Community Core Vision)} for Multitouch Input (and of course a connected Camera-Beamer-Table-Installation). See section \ref{sec:input} for more.
+\item At first you will need a \emph{\emph{Java Runtime Environment 1.6}} or later (1.5 will probably work, too)~\cite{bib:java}.
+\item For MIDI input, you will need a connected MIDI keyboard.See Section~\ref{sec:midiinput}.
+\item When not using either a MIDI keyboard which generates sound itself, or the internal Java MIDI synthesizer, you will also need a \emph{virtual MIDI cable} if you are using MIDI and not SynOSCopy. See Section~\ref{sec:output} for details.
+\item Under the same circumstances as above, you will also need a \emph{Synthesizer} understanding MIDI or SynOSCopy. See Section~\ref{sec:output} for more info.
+\item When using the multitouch input, you will need \emph{CCV (Community Core Vision)} (and of course a connected Camera-Beamer-Table-Installation). See Section~\ref{sec:input} for more.
 \end{itemize}
 
 
-\section{A first glance}
+\section{A First Glance}
 
-To run the precompiled JAR package, run the following command from the directory containing \textit{RationalPiano.jar}:
+To run the precompiled JAR package, run the following command from the directory containing \emph{RationalPiano.jar}:
 
 \begin{verbatim}
 java -jar RationalPiano.jar
 \end{verbatim}
 
-\textbf{Note:} You can also run it with \textit{javaw} instead, but that will prevent the displaying of the debug output.
+\textbf{Note:} You can also run it with \emph{javaw} instead, but that will prevent the displaying of the debug output.
 
-\textbf{Troubleshooting:} If the \textit{java} executable could not be found, but Java is installed, it is probably not in your PATH environment. Instead of just typing \textit{"java"}, you can enter the full path to your \textit{java} executable.
+\textbf{Troubleshooting:} If the \emph{java} executable could not be found, but Java is installed, it is probably not in your PATH environment. Instead of just typing \emph{``java''}, you can enter the full path to your \emph{java} executable.
 
-\begin{figure}[!ht]
-\includegraphics[width=\textwidth]{images/interface.png}
-\centering
-\caption{The Interface of Rational Piano after startup}
-\label{fig:interface}
-\end{figure}
+%\begin{figure}[!ht]
+%\includegraphics[width=\textwidth]{images/interface.png}
+%\centering
+%\caption{The Interface of Rational Piano after startup}
+%\label{fig:interface}
+%\end{figure}
 
-After the applet has been loaded, you see the interface like in Fig.\ref{fig:interface}.
+%After the applet has been loaded, you see the interface like in Fig.\ref{fig:interface}.
+After the applet has been loaded, you see just a black screen. The visualization will not appear until you provide some input to the system which then will look like in Fig.\ref{fig:interface_active}.
 
 Now you can start playing around (but yet without sound or multitouch input): either click on the single lines or press your alphanumeric keyboard keys.
 
@@ -412,8 +440,12 @@ Now you can start playing around (but yet without sound or multitouch input): ei
 
 You should see a screen similar to Fig.\ref{fig:interface_active} when you press some keys. As long as a key is pressed, it is highlighted in a different color\footnote{green by default}.
 
+\section{Setting Up MIDI Input}
+\label{sec:midiinput}
 
-\section{Setting up Sound Output}
+Setting up MIDI input is easy in the newest version, as that can be done at runtime. After you have started \emph{Rational Piano}, you will see a dropdown control in the upper left corner of the screen. With a mouse click, you can change the MIDI input device which immediately can be used. The setting will be saved to the configuration file, so the next time you start \emph{Rational Piano}, that device will be used again.
+
+\section{Setting Up Sound Output}
 \label{sec:output}
 
 To get Note Messages out of the Applet, one can either use MIDI or OSC (with namespace SynOSCopy). In either case a synthesizer application\footnote{or a host hosting VSTi plugins or whatever else understands one of the two communication protocols} is needed on the other side of that channel.
@@ -422,42 +454,44 @@ MIDI is the preferred way because nearly all software synthesizers understand it
 
 \subsection{Using MIDI}
 
-When using this applet via MIDI with a software synthesizer, one needs a \textit{Virtual MIDI Cable} to connect the Applet with the Synthesizer.
+Java provides its own MIDI device ``Java Sound Synthesizer Sun Microsystems'' which supplies very ``cheap'' sounds without the need for program-external synthesizers. To activate that, edit the configuration file (on details see Sec.\ref{chap:settings}) and set ``outputMode = MIDI\_ONLY'' or ``outputMode = MIDI\_AND\_OSC'' and ``midiOutputDevice = Java Sound Synthesizer Sun Microsystems''\footnote{or just ``midiOutputDevice = java'' as partial strings are enough}.
 
-\textit{Maple Virtual Midi Cable} is a free one for Windows \cite{bib:maple}. This specific virtual MIDI cable works simply: it has four ports that are registered as MIDI outputs and four ports that are registered as MIDI inputs. All data fed into one of those MIDI output ports gets forwarded to the corresponding MIDI input port.
+When using this applet via MIDI with a \emph{software synthesizer}, one needs a \emph{Virtual MIDI Cable} to connect the Applet with the Synthesizer.
 
-By default, the MIDI output port \textit{"Maple Midi Out: Port 4"} is chosen. You can adjust that to your needs in the configuration file, for more details see Chapter \ref{chap:settings}.
+\emph{Maple Virtual Midi Cable} is a free one for Windows~\cite{bib:maple}. This specific virtual MIDI cable works simply: it has four ports that are registered as MIDI outputs and four ports that are registered as MIDI inputs. All data fed into one of those MIDI output ports gets forwarded to the corresponding MIDI input port.
 
-That means, in your synthesizer application you need to setup the MIDI input to \textit{"Maple Midi In: Port 4"} or similar.
+In the configuration, you have to choose the correct MIDI output port according to your virtual MIDI cable. With \emph{Maple Virtual Midi Cable} this would be for example \emph{``Maple Midi Out: Port 4''}. You can adjust that to your needs in the configuration file, for more details see Chapter~\ref{chap:settings}.
 
-\textbf{Note:} If you have an \textbf{external} MIDI synthesizer connected to your soundcard via a physical MIDI cable, you \emph{do not} need the virtual MIDI cable. You just need to setup the hardware MIDI output port in the configuration file, for more details see chapter \ref{chap:settings}.
+That means, in your synthesizer application you need to setup the MIDI input to \emph{``Maple Midi In: Port 4''} or similar.
 
-\subsubsection{Help with the synthesizer application}
+\textbf{Note:} If you have an \textbf{external} MIDI synthesizer connected to your soundcard via a physical MIDI cable, you \emph{do not} need the virtual MIDI cable. You just need to setup the hardware MIDI output port in the configuration file, for more details see chapter~\ref{chap:settings}.
 
-If you are desperate and do not know how to find a synthesizer application understanding MIDI, here is a little help. You also might head over to KVR \cite{bib:kvr} and browse some free (or non-free) synthesizers. Note that for most of those, you will need a \textit{host application}.
+\subsubsection{Help With the Synthesizer Application}
 
-A free VSTi\footnote{synthesizer plugin} for Windows and OSX is 4front Piano \cite{bib:4front}.
+If you are desperate and do not know how to find a synthesizer application understanding MIDI, here is a little help. You also might head over to KVR~\cite{bib:kvr} and browse some free (or non-free) synthesizers. Note that for most of those, you will need a \emph{host application}.
 
-But then you will still need a VST host application. A minimalistic free VST host is SAVIHost \cite{bib:savi}, but it is only available for Windows. See its website for information on how to load a VST plugin (like 4front Piano) in SAVIHost.
+A free VSTi\footnote{synthesizer plugin} for Windows and OSX is 4front Piano~\cite{bib:4front}.
 
-To set the correct MIDI port in SAVIHost, in the Menu choose \textit{Devices $\rightarrow$ MIDI} and as \textit{Input Port} the entry \textit{"Maple Midi In: Port 4"} (or whatever your configured port is).
+But then you will still need a VST host application. A minimalistic free VST host is SAVIHost~\cite{bib:savi}, but it is only available for Windows. See its website for information on how to load a VST plugin (like 4front Piano) in SAVIHost.
+
+To set the correct MIDI port in SAVIHost, in the Menu choose \emph{Devices $\rightarrow$ MIDI} and as \emph{Input Port} the entry \emph{``Maple Midi In: Port 4''} (or whatever your configured port is).
 
 \textbf{Now you should be able to hear your playing from Rational Piano.} Do not forget to restart the application after installing the virtual MIDI cable.
 
-\textbf{Info:} Furtherwise, under Windows, it is adviseable (but not necessary) to use an ASIO driver for the soundcard to achieve lower latency of the audio generating part. If you have a consumer audio card that does not ship with ASIO drivers, you can use ASIO4ALL \cite{bib:asio4all}. Unfortunately SAVIHost does not support ASIO, but with other hosts you can minimize your audio latency that way.
+\textbf{Info:} Furtherwise, under Windows, it is adviseable (but not necessary) to use an ASIO driver for the soundcard to achieve lower latency of the audio generating part. If you have a consumer audio card that does not ship with ASIO drivers, you can use ASIO4ALL~\cite{bib:asio4all}. Unfortunately SAVIHost does not support ASIO, but with other hosts you can minimize your audio latency that way.
 
-\textbf{Alternative} to 4front Piano running in SAVIHost: You could also use PureData \cite{bib:puredata}, but do not be too sad about poor sounding synths\footnote{You can make it sound good, but most simple synths just sound retro}. Start up PureData, activate the \textit{compute audio} checkbox, choose menu \textit{Help $\rightarrow$ Browser ...} then \textit{7.stuff/ $\rightarrow$ synth $\rightarrow$ 1.poly.synth.pd} which you need to double-click. Then choose menu \textit{Media $\rightarrow$ MIDI settings...} and as \textit{input device 1} choose \textit{Maple Midi In: Port 4}, press \textit{OK}. Now check that \textit{Edit} mode is \textit{deactivated} in menu \textit{Edit $\rightarrow$ Edit mode} (there should be no check mark next to the menu entry). Load a preset by clicking the circle next to \textit{recall} in one of the \textit{preset} boxes. Last thing to do is find the box next to \textit{MUTE} at the bottom of the patch and drag the number up to \textit{100}. That should be enough to let PureData receive MIDI messages from Rational Piano. If not, try activating the box on the top left of the patch under the text \textit{random note tester} which play some random notes. If not, check your audio settings in menu \textit{Media $\rightarrow$ Audio settings...}.
+\textbf{Alternative} to 4front Piano running in SAVIHost: You could also use PureData~\cite{bib:puredata}, but do not be too sad about poor sounding synths\footnote{You can make it sound good, but most simple synths just sound retro}. Start up PureData, activate the \emph{compute audio} checkbox, choose menu \emph{Help $\rightarrow$ Browser ...} then \emph{7.stuff/ $\rightarrow$ synth $\rightarrow$ 1.poly.synth.pd} which you need to double-click. Then choose menu \emph{Media $\rightarrow$ MIDI settings...} and as \emph{input device 1} choose \emph{Maple Midi In: Port 4}, press \emph{OK}. Now check that \emph{Edit} mode is \emph{deactivated} in menu \emph{Edit $\rightarrow$ Edit mode} (there should be no check mark next to the menu entry). Load a preset by clicking the circle next to \emph{recall} in one of the \emph{preset} boxes. Last thing to do is find the box next to \emph{MUTE} at the bottom of the patch and drag the number up to \emph{100}. That should be enough to let PureData receive MIDI messages from Rational Piano. If not, try activating the box on the top left of the patch under the text \emph{random note tester} which play some random notes. If not, check your audio settings in menu \emph{Media $\rightarrow$ Audio settings...}.
 
 
 \subsection{Using OSC}
 
-When using OSC, one has to use a host or synthesizer that understands OSC and the SynOSCopy namespace. You can use PureData \cite{bib:puredata} with a custom patch for that task.
+When using OSC, one has to use a host or synthesizer that understands OSC and the SynOSCopy namespace. You can use PureData~\cite{bib:puredata} with a custom patch for that task.
 
-By default, OSC Voice messages get sent to UDP port \textit{12000} of \textit{localhost}.
+By default, OSC Voice messages get sent to UDP port \emph{12000} of \emph{localhost}.
 
 \textbf{Note:} Rational Piano's Voice Management for SynOSCopy is not implemented yet due to a conceptual problem with SynOSCopy\footnote{If a voice gets turned off, the sender has no idea whether the synthesized voice has already faded out when it turns on the voice with the same number again. This could cut a fading-out voice. An idea for improvement for SynOSCopy would be to specify a parameter with the voice-on message which allows to choose whether the voice should be cut or not. The receiver then must have its own voice management.}. Right now, every note gets sent to the voice with the same number as the MIDI note number.
 
-There is no polyphonic SynOSCopy patch for PureData yet. But you can try a monophonic one. Load up the \textit{Keyboard Example} from \textit{SynOscP5} \cite{bib:synoscopy_keyboard_example}. In Edit mode\footnote{in menu \textit{Edit $\rightarrow$ Edit mode} there should be a check mark next to the menu entry}, change the box containing \textit{"routeOSC /V1"} to \textit{"routeOSC /*"}. Activate audio if you have not already by clicking menu \textit{Media $\rightarrow$ audio ON}. You can also turn up the volume with the green slider (with Edit mode deactivated).
+There is no polyphonic SynOSCopy patch for PureData yet. But you can try a monophonic one. Load up the \emph{Keyboard Example} from \emph{SynOscP5}~\cite{bib:synoscopy_keyboard_example}. In Edit mode\footnote{in menu \emph{Edit $\rightarrow$ Edit mode} there should be a check mark next to the menu entry}, change the box containing \emph{``routeOSC /V1''} to \emph{``routeOSC /*''}. Activate audio if you have not already by clicking menu \emph{Media $\rightarrow$ audio ON}. You can also turn up the volume with the green slider (with Edit mode deactivated).
 
 \textbf{Now you should be able to hear your playing from Rational Piano.}
 
@@ -467,9 +501,9 @@ There is no polyphonic SynOSCopy patch for PureData yet. But you can try a monop
 
 Now, right after following the instructions of the last section, you should already be able to hear sounds when you press the typing keyboard keys.
 
-Now we want to setup Multitouch Input from your multitouch table. You will need (or maybe already have) the program CCV (Community Core Vision) \cite{bib:ccv}. Rational Piano was tested with CCV 1.3.
+Now we want to setup Multitouch Input from your multitouch table. You will need (or maybe already have) the program CCV (Community Core Vision)~\cite{bib:ccv}. Rational Piano was tested with CCV 1.3.
 
-In CCV, adjust the camera recognition settings to your needs, and \textbf{activate TUIO UDP output} in the right panel in the section \textit{Communication}. This will by default map to TUIO port 3333 which is preconfigured in Rational Piano's settings.
+In CCV, adjust the camera recognition settings to your needs, and \textbf{activate TUIO UDP output} in the right panel in the section \emph{Communication}. This will by default map to TUIO port 3333 which is preconfigured in Rational Piano's settings.
 
 This should be enough to make the Rational Piano application receive the multitouch messages generated by fingers pressing onto the surface. If it does not work as expected, examine the recognized blobs in CCV and try to adjust its settings.
 
@@ -477,7 +511,7 @@ This should be enough to make the Rational Piano application receive the multito
 \chapter{Tweaking the Settings}
 \label{chap:settings}
 
-When Rational Piano is run the first time, it generates a configuration file with filename \textit{"RationalPianoSettings.cfg"}. It is text-based and contains an explanation for each parameter which should be self-explanatory. You do not need to worry to mess anything up, the configuration file gets read everytime the application is started and immediately is written back in the original format again. All non-readable or garbage lines get sorted out. Parameters out of range get corrected, the minimum and maximum values are mentioned in the comments in the configuration file.
+When Rational Piano is run the first time, it generates a configuration file with filename \emph{``RationalPianoSettings.cfg''}. It is text-based and contains an explanation for each parameter which should be self-explanatory. You do not need to worry to mess anything up, the configuration file gets read everytime the application is started and immediately is written back in the original format again. All non-readable or garbage lines get sorted out. Parameters out of range get corrected, the minimum and maximum values are mentioned in the comments in the configuration file.
 
 \textbf{Info:} For Double or Float values without a fractional, the dot is optional.
 
@@ -487,52 +521,59 @@ Settings to adjust window properties:
 
 \noindent
 \textbf{fullscreen} \\
-\textit{Description:} Whether the application should get run full screen or in a window. \\
-\textit{Note:} In full screen mode, the window width and height settings are ignored and the screen resolution is used instead. \\
-\textit{Type:} Boolean. \\
-\textit{Default value:} true.
+\emph{Description:} Whether the application should get run full screen or in a window. \\
+\emph{Note:} In full screen mode, the window width and height settings are ignored and the screen resolution is used instead. \\
+\emph{Type:} Boolean. \\
+\emph{Default value:} true.
+
+\noindent
+\textbf{vertical\_scaling} \\
+\emph{Description:} Use the full width, but only the given fraction of the height of the full screen area, aligned to the bottom. \\
+\emph{Note:} Only taken account for in fullscreen mode. This setting was set to 0.2 to produce the output seen in Fig.\ref{fig:interface_foto}. \\
+\emph{Type:} Double. \\
+\emph{Default value:} 1.0.
 
 \noindent
 \textbf{width} \\
-\textit{Description:} Width of the application window's content. \\
-\textit{Note:} Only in windowed mode. \\
-\textit{Type:} Integer \\
-\textit{Bounds:} Minimum = 100, Maximum = 10000. \\
-\textit{Default value:} 400.
+\emph{Description:} Width of the application window's content. \\
+\emph{Note:} Only in windowed mode. \\
+\emph{Type:} Integer \\
+\emph{Bounds:} Minimum = 100, Maximum = 10000. \\
+\emph{Default value:} 1000.
 
 \noindent
 \textbf{height} \\
-\textit{Description:} Height of the application window's content. \\
-\textit{Note:} Only in windowed mode. \\
-\textit{Type:} Integer \\
-\textit{Bounds:} Minimum = 100, Maximum = 10000. \\
-\textit{Default value:} 300.
+\emph{Description:} Height of the application window's content. \\
+\emph{Note:} Only in windowed mode. \\
+\emph{Type:} Integer \\
+\emph{Bounds:} Minimum = 100, Maximum = 10000. \\
+\emph{Default value:} 500.
 
 \noindent
 \textbf{framerate} \\
-\textit{Description:} How often the image should get redrawn per second. The consonance calculation also takes place on every frame. \\
-\textit{Type:} Float \\
-\textit{Bounds:} Minimum = 1.0, Maximum = 200.0. \\
-\textit{Default value:} 60.0.
+\emph{Description:} How often the image should get redrawn per second. The consonance calculation also takes place on every frame. \\
+\emph{Type:} Float \\
+\emph{Bounds:} Minimum = 1.0, Maximum = 200.0. \\
+\emph{Default value:} 60.0.
 
 
 \section{Line Settings}
 
 \noindent
 \textbf{notecount} \\
-\textit{Description:} Counts of notes to display as lines. \\
-\textit{Note:} The maximum MIDI note number is 127, so notestart + notecount - 1 should be smaller than 128. \\
-\textit{Type:} Integer \\
-\textit{Bounds:} Minimum = 1, Maximum = 128. \\
-\textit{Default value:} 25.
+\emph{Description:} Counts of notes to display as lines. \\
+\emph{Note:} The maximum MIDI note number is 127, so notestart + notecount - 1 should be smaller than 128. A full piano keyboard has 88 keys. \\
+\emph{Type:} Integer \\
+\emph{Bounds:} Minimum = 1, Maximum = 128. \\
+\emph{Default value:} 88.
 
 \noindent
 \textbf{notestart} \\
-\textit{Description:} MIDI note number of the first note. \\
-\textit{Note:} The maximum MIDI note number is 127, so notestart + notecount - 1 should be smaller than 128. \\
-\textit{Type:} Integer \\
-\textit{Bounds:} Minimum = 0, Maximum = 127. \\
-\textit{Default value:} 60 (C4).
+\emph{Description:} MIDI note number of the first note. \\
+\emph{Note:} The maximum MIDI note number is 127, so notestart + notecount - 1 should be smaller than 128. \\
+\emph{Type:} Integer \\
+\emph{Bounds:} Minimum = 0, Maximum = 127. \\
+\emph{Default value:} 21 (A0).
 
 \begin{figure}[!ht]
 \includegraphics[width=0.7\textwidth]{images/linebend.png}
@@ -543,42 +584,49 @@ Settings to adjust window properties:
 
 \noindent
 \textbf{lineBend} \\
-\textit{Description:} Nonlinear distortion of the line width translation, 1 means no distortion, smaller values mean stronger distortion where the lines have a tendency to be more wide. \\
-\textit{Note:} For a visual explanation how input values get translated to output values in dependence of this parameter, see Fig.\ref{fig:linebend}. \\
-\textit{Type:} Double \\
-\textit{Bounds:} Minimum = 0, Maximum = 1. \\
-\textit{Default value:} 0.25.
+\emph{Description:} Nonlinear distortion of the line width translation, 1 means no distortion, smaller values mean stronger distortion where the lines have a tendency to be more wide. \\
+\emph{Note:} For a visual explanation how input values get translated to output values in dependence of this parameter, see Fig.\ref{fig:linebend}. \\
+\emph{Type:} Double \\
+\emph{Bounds:} Minimum = 0, Maximum = 1. \\
+\emph{Default value:} 0.25.
 
 
 \section{Note Output Settings}
 
 \noindent
 \textbf{outputMode} \\
-\textit{Description:} Choose wheter Note messages should get sent via MIDI, OSC (with the SynOSCopy namespace), or both. \\
-\textit{Type:} Enum RationalPiano.NoteOut.outputModes  \\
-\textit{Values:} MIDI\_ONLY, OSC\_ONLY, MIDI\_AND\_OSC. \\
-\textit{Default value:} MIDI\_AND\_OSC.
+\emph{Description:} Choose wheter Note messages should get sent via MIDI, OSC (with the SynOSCopy namespace), both or none. \\
+\emph{Type:} Enum RationalPiano.NoteOut.outputModes  \\
+\emph{Values:} MIDI\_ONLY, OSC\_ONLY, MIDI\_AND\_OSC, NO\_OUTPUT. \\
+\emph{Default value:} NO\_OUTPUT.
 
 \noindent
 \textbf{oscport} \\
-\textit{Description:} UDP port to send OSC voice messages (with the SynOSCopy namespace) to. \\
-\textit{Type:} Integer \\
-\textit{Bounds:} Minimum = 0, Maximum = 65535. \\
-\textit{Default value:} 12000.
+\emph{Description:} UDP port to send OSC voice messages (with the SynOSCopy namespace) to. \\
+\emph{Type:} Integer \\
+\emph{Bounds:} Minimum = 0, Maximum = 65535. \\
+\emph{Default value:} 12000.
 
 \noindent
-\textbf{midiDevice} \\
-\textit{Description:} Part of the string of the MIDI port to send note messages to. \\
-\textit{Note:} If you do not know the exact name of the port, just run the application and watch the debug output where all ports get listed. \\
-\textit{Type:} String \\
-\textit{Default value:} Maple Midi Out: Port 4.
+\textbf{midiOutputDevice} \\
+\emph{Description:} Part of the string of the MIDI port to send note messages to. \\
+\emph{Note:} If you do not know the exact name of the port, just run the application and watch the debug output where all ports get listed. \\
+\emph{Type:} String \\
+\emph{Default value:} java.
+
+\noindent
+\textbf{midiInputDevice} \\
+\emph{Description:} Part of the string of the MIDI port to receive note and sustain pedal messages from. \\
+\emph{Note:} If you do not know the exact name of the port, just run the application and watch the debug output where all ports get listed. \\
+\emph{Type:} String \\
+\emph{Default value:} \emph{nothing}.
 
 \noindent
 \textbf{midiChannel} \\
-\textit{Description:} MIDI channel to use for note messages that get sent to the chosen MIDI port. \\
-\textit{Type:} Integer \\
-\textit{Bounds:} Minimum = 0, Maximum = 15. \\
-\textit{Default value:} 0.
+\emph{Description:} MIDI channel to use for note messages that get sent to the chosen MIDI port. \\
+\emph{Type:} Integer \\
+\emph{Bounds:} Minimum = 0, Maximum = 15. \\
+\emph{Default value:} 0.
 
 
 \section{Consonance Calculation Settings}
@@ -604,48 +652,48 @@ This is just for consonance calculation and does \textbf{not} impact note output
 
 \noindent
 \textbf{attack} \\
-\textit{Description:} Attack time of new voices in seconds. \\
-\textit{Type:} Double \\
-\textit{Bounds:} Minimum = 0, Maximum = 60. \\
-\textit{Default value:} 0.15.
+\emph{Description:} Attack time of new voices in seconds. \\
+\emph{Type:} Double \\
+\emph{Bounds:} Minimum = 0, Maximum = 60. \\
+\emph{Default value:} 0.15.
 
 \noindent
 \textbf{decay} \\
-\textit{Description:} Decay time of held voices in seconds. \\
-\textit{Note:} Only applicable if holdSustain is true. \\
-\textit{Type:} Double \\
-\textit{Bounds:} Minimum = 0, Maximum = 60. \\
-\textit{Default value:} 0.5.
+\emph{Description:} Decay time of held voices in seconds. \\
+\emph{Note:} Only applicable if holdSustain is true. \\
+\emph{Type:} Double \\
+\emph{Bounds:} Minimum = 0, Maximum = 60. \\
+\emph{Default value:} 4.0.
 
 \noindent
 \textbf{sustain} \\
-\textit{Description:} Sustain level of held voices as a fraction of the initial velocity. \\
-\textit{Note:} Only applicable if holdSustain is true, in that case the volume stays at the sustain level after the attack + decay phase. \\
-\textit{Type:} Double \\
-\textit{Bounds:} Minimum = 0, Maximum = 1. \\
-\textit{Default value:} 0.65.
+\emph{Description:} Sustain level of held voices as a fraction of the initial velocity. \\
+\emph{Note:} Only applicable if holdSustain is true, in that case the volume stays at the sustain level after the attack + decay phase. \\
+\emph{Type:} Double \\
+\emph{Bounds:} Minimum = 0, Maximum = 1. \\
+\emph{Default value:} 0.0,  as the value of 0.0 results in a fadeout like with a piano sound when the value of decay is greater than that of release.
 
 \noindent
 \textbf{release} \\
-\textit{Description:} Release time of held voices in seconds. \\
-\textit{Type:} Double \\
-\textit{Bounds:} Minimum = 0, Maximum = 60. \\
-\textit{Default value:} 1.0.
+\emph{Description:} Release time of held voices in seconds. \\
+\emph{Type:} Double \\
+\emph{Bounds:} Minimum = 0, Maximum = 60. \\
+\emph{Default value:} 1.0.
 
 \noindent
 \textbf{holdSustain} \\
-\textit{Description:} If true, hold the voices' volumes after attack + decay phase at the sustain level. If false, volumes are not held and release starts right after the attack phase (pluck mode). \\
-\textit{Type:} Boolean \\
-\textit{Bounds:} Minimum = 100, Maximum = 10000. \\
-\textit{Default value:} true.
+\emph{Description:} If true, hold the voices' volumes after attack + decay phase at the sustain level. If false, volumes are not held and release starts right after the attack phase (pluck mode). \\
+\emph{Type:} Boolean \\
+\emph{Bounds:} Minimum = 100, Maximum = 10000. \\
+\emph{Default value:} true.
 
 \noindent
 \textbf{maxfrac} \\
-\textit{Description:} Maximum dissonance to calculate a fraction for. \\
-\textit{Note:} For details, see Chapter \ref{chap:consonance}. \\
-\textit{Type:} Integer \\
-\textit{Bounds:} Minimum = 1, Maximum = 2147483647. \\
-\textit{Default value:} 157, as with that value for 88 all of the notes of a full piano keyboard there is a fitting fraction in the range of $\pm$50 semitones.
+\emph{Description:} Maximum dissonance to calculate a fraction for. \\
+\emph{Note:} For details, see Chapter~\ref{chap:consonance}. \\
+\emph{Type:} Integer \\
+\emph{Bounds:} Minimum = 1, Maximum = 2147483647. \\
+\emph{Default value:} 256 to include the \emph{just intonation} ratio of $\frac{16}{15}$.
 
 \begin{figure}[!ht]
 \includegraphics[width=\textwidth]{images/bellcurve.png}
@@ -656,21 +704,21 @@ This is just for consonance calculation and does \textbf{not} impact note output
 
 \noindent
 \textbf{bellWidth} \\
-\textit{Description:} Width of the bell curve which gets drawn around each fraction when calculating dissonance. \\
-\textit{Note:} The bell curve has the function $e^{- \frac{(- 12 \cdot Log_2(fraction) + semitoneDifference)^2}{2 \cdot bellWidth^2}}$ like shown in Fig.\ref{fig:bellcurve}. \\
-\textit{Type:} Double \\
-\textit{Bounds:} Minimum = 0.01, Maximum = 1. \\
-\textit{Default value:} 0.25.
+\emph{Description:} Width of the bell curve which gets drawn around each fraction when calculating dissonance. \\
+\emph{Note:} The bell curve has the function $e^{- \frac{(- 12 \cdot Log_2(fraction) + semitoneDifference)^2}{2 \cdot bellWidth^2}}$ like shown in Fig.\ref{fig:bellcurve}. \\
+\emph{Type:} Double \\
+\emph{Bounds:} Minimum = 0.01, Maximum = 1. \\
+\emph{Default value:} 0.25.
 
 
 \section{Multitouch Input Settings}
 
 \noindent
 \textbf{tuioPort} \\
-\textit{Description:} UDP port to listen at for TUIO cursor messages. \\
-\textit{Type:} Integer \\
-\textit{Bounds:} Minimum = 0, Maximum = 65535. \\
-\textit{Default value:} 3333.
+\emph{Description:} UDP port to listen at for TUIO cursor messages. \\
+\emph{Type:} Integer \\
+\emph{Bounds:} Minimum = 0, Maximum = 65535. \\
+\emph{Default value:} 3333.
 
 
 \section{Color Settings}
@@ -679,187 +727,217 @@ The colors are setup in HSB format, so one color is expressed by the three 8-bit
 
 \noindent
 \textbf{backgroundColorHue} \\
-\textit{Description:} Hue of the Background Color. \\
-\textit{Type:} Integer \\
-\textit{Bounds:} Minimum = 0, Maximum = 255. \\
-\textit{Default value:} 0.
+\emph{Description:} Hue of the Background Color. \\
+\emph{Type:} Integer \\
+\emph{Bounds:} Minimum = 0, Maximum = 255. \\
+\emph{Default value:} 0.
 
 \noindent
 \textbf{backgroundColorSaturation} \\
-\textit{Description:} Saturation of the Background Color. \\
-\textit{Type:} Integer \\
-\textit{Bounds:} Minimum = 0, Maximum = 255. \\
-\textit{Default value:} 0.
+\emph{Description:} Saturation of the Background Color. \\
+\emph{Type:} Integer \\
+\emph{Bounds:} Minimum = 0, Maximum = 255. \\
+\emph{Default value:} 0.
 
 \noindent
 \textbf{backgroundColorBrightness} \\
-\textit{Description:} Brightness of the Background Color. \\
-\textit{Type:} Integer \\
-\textit{Bounds:} Minimum = 0, Maximum = 255. \\
-\textit{Default value:} 0.
+\emph{Description:} Brightness of the Background Color. \\
+\emph{Type:} Integer \\
+\emph{Bounds:} Minimum = 0, Maximum = 255. \\
+\emph{Default value:} 0.
 
 \noindent
 \textbf{lineColorHueInactive} \\
-\textit{Description:} Hue of an inactive line. \\
-\textit{Type:} Integer \\
-\textit{Bounds:} Minimum = 0, Maximum = 255. \\
-\textit{Default value:} 180.
+\emph{Description:} Hue of an inactive line. \\
+\emph{Type:} Integer \\
+\emph{Bounds:} Minimum = 0, Maximum = 255. \\
+\emph{Default value:} 180.
 
 \noindent
 \textbf{lineColorHueActive} \\
-\textit{Description:} Hue of an active line. \\
-\textit{Type:} Integer \\
-\textit{Bounds:} Minimum = 0, Maximum = 255. \\
-\textit{Default value:} 80.
+\emph{Description:} Hue of an active line. \\
+\emph{Type:} Integer \\
+\emph{Bounds:} Minimum = 0, Maximum = 255. \\
+\emph{Default value:} 80.
 
 \noindent
 \textbf{lineColorSaturation} \\
-\textit{Description:} Saturation of the color of a line. \\
-\textit{Type:} Integer \\
-\textit{Bounds:} Minimum = 0, Maximum = 255. \\
-\textit{Default value:} 255.
+\emph{Description:} Saturation of the color of a line. \\
+\emph{Type:} Integer \\
+\emph{Bounds:} Minimum = 0, Maximum = 255. \\
+\emph{Default value:} 255.
 
 \noindent
 \textbf{lineColorBrightness} \\
-\textit{Description:} Brightness of the color of a line. \\
-\textit{Type:} Integer \\
-\textit{Bounds:} Minimum = 0, Maximum = 255. \\
-\textit{Default value:} 255.
+\emph{Description:} Brightness of the color of a line. \\
+\emph{Type:} Integer \\
+\emph{Bounds:} Minimum = 0, Maximum = 255. \\
+\emph{Default value:} 255.
 
 
 \chapter{Understanding and Building the Sourcecode}
 \label{chap:source}
 
-All source files are well documented\footnote{hopefully} with Javadoc. To read the generated Javadoc, open \textit{doc/javadoc/index.html}.
+\emph{Rational Piano} is open source, and can be found at \url{https://github.com/fabb/Rational-Piano}. All source files are well documented\footnote{in all conscience} with Javadoc. To read the generated Javadoc, open \emph{doc/javadoc/index.html}.
 
-\section{Classes and how they work together}
+\section{Classes and How They Work Together}
 
-To get a grasp of how the classes work together, have a look at Fig.\ref{fig:interaction}\footnote{Notice that this is not UML}.
+To get a grasp of how the classes work together, they are visualized in an UML class diagram in Fig.\ref{fig:interaction}. Most classes are just instantiated once (in Fig.\ref{fig:interaction} all classes that have \emph{no} association with an ``0..*'' pointing at it).
 
-Most classes are just instantiated once (in Fig.\ref{fig:interaction} all classes that have \emph{no} arrow with an "n" pointing at it).
-
-\begin{figure}[!ht]
-\includegraphics[width=\textwidth]{images/control_interaction.png}
+\begin{figure}[htbp]
+\includegraphics[width=\textwidth]{images/uml_class_diagram/rational_piano_class_diagram.png}
 \centering
-\caption{Interaction of the Classes}
+\caption{UML class diagram with associations between classes}
 \label{fig:interaction}
 \end{figure}
 
 
-\subsection{RationalPiano.Run}
+\subsection{rationalpiano.run}
 \label{sec:Run}
 
-\textbf{RationalPiano.Run.RationalPiano} is the main class whose \textit{main()} method gets called to start the application. It is a Processing applet that gets called from itself with the method PApplet.main(). The advantage is that it can run in \textit{present} mode\footnote{fullscreen mode} and as a native Java application.
+\begin{itemize}
+	\item \textbf{rationalpiano.run.RationalPiano} is the main class whose \emph{main()} method gets called to start the application. It is a Processing applet that gets called from itself with the method PApplet.main(). The advantage is that it can run both in \emph{present} mode\footnote{Processing's fullscreen mode} and as a native Java application.
 
-RationalPiano.Run.RationalPiano initializes the logger, loads the configuration, starts up the Processing applet and creates interconnected objects of GraphicControls, NoteOutput, Voices and InputDevs. Furthermore, it forwards Processing calls to draw() to the objects of GraphicControls (for drawing) and Voices (for consonance calculation). It also forwards keyboard and mouse events to the instance of InputDevs.
-
-
-\subsection{RationalPiano.Logging}
-
-\textbf{RationalPiano.Logging.RationalLogger} provides a method to initialize the top logger which gets (indirectly\footnote{The loggers of all other classes get routed through the top logger}) used for all debug output of the application. It is also possible to write all output to a logfile by initializing the logger with a different parameter.
+	The class initializes the logger, loads the configuration, starts up the Processing applet and creates interconnected objects of GraphicControls, NoteOutput, Voices and InputDevs. Furthermore, it forwards Processing calls to draw() to the objects of GraphicControls (for drawing) and Voices (for consonance calculation). It also forwards keyboard and mouse events to the instance of InputDevs.
+\end{itemize}
 
 
-\subsection{RationalPiano.Persistence}
+\subsection{rationalpiano.logging}
 
-\textbf{RationalPiano.Persistence.ConfigurationData} has several public fields that are the initialization parameters for the generated objects mentioned in section \ref{sec:Run}. For an explanation of all fields, have a look at chapter \ref{chap:settings}. The class reads in the configuration from a file and writes the configuration to it again.
-
-
-\subsection{RationalPiano.Persistence.Annotations}
-
-This package contains the annotations \textbf{FieldDescription}, \textbf{FieldDoubleMinMax}, \textbf{FieldFloatMinMax} and \textbf{FieldIntegerMinMax} which are used to comment the fields of RationalPiano.Persistence.ConfigurationData in a way that it is possible to write the comments to the configuration file.
+\begin{itemize}
+	\item \textbf{rationalpiano.logging.RationalLogger} provides a method to initialize the top logger which gets (indirectly\footnote{The loggers of all other classes get routed through the top logger}) used for all debug output of the application. It is also possible to write all output to a logfile by initializing the logger with a different parameter.
+\end{itemize}
 
 
-\subsection{RationalPiano.VoiceManagement}
+\subsection{rationalpiano.persistence}
 
-\textbf{RationalPiano.VoiceManagement.Voices} manages active voices. It provides methods to add and remove voices which get called by an object of InputDevs. Calls to that method get forwarded to NoteOut. Voices also keeps an instance of Consonance with which it calculates the consonance for all active voices every frame. The resulting consonances get sent to the object of GraphicControls to set the line widths.
-
-Every active voice is an object of type \textbf{RationalPiano.VoiceManagement.OneVoice} that allows to store various parameters like initial velocity or hold time individually for each active voice. 
-
-\textbf{RationalPiano.VoiceManagement.FadeTracking} makes it possible to use an ADSR envelope\footnote{see section \ref{sec:ADSR}} for each voice. The Voices object uses an object of this class to calculate a current velocity for each active voice.
+\begin{itemize}
+	\item \textbf{rationalpiano.persistence.ConfigurationData} holds several public fields that are the initialization parameters for the generated objects mentioned in Section~\ref{sec:Run}. For an explanation of all fields, refer to the full documentation of \emph{Rational Piano}~\cite{bib:RationalPianoDoc}. The class is able to read in the configuration from a file in combination with sanitizing the read data and also writing the configuration to a file again.
+\end{itemize}
 
 
-\subsection{RationalPiano.ConsonanceCalculation}
+\subsection{rationalpiano.persistence.annotations}
 
-\textbf{RationalPiano.ConsonanceCalculation.Consonance} provides a method to calculate the consonance for all keys in range for a set of voice velocities. The Voices object initializes and keeps an instance of this class. For an explanation of the computation, see section \ref{sec:computation}.
-
-\textbf{RationalPiano.ConsonanceCalculation.Rational} represents a rational number and is used for the initialization of Consonance.
-
-
-\subsection{RationalPiano.Graphic}
-
-\textbf{RationalPiano.Graphic.GraphicControls} manages the screen elements\footnote{right now just lines} and allows to draw them with a provided method. It holds an instance of GraphicNoteLineArray and provides methods to get line parameters and to set line widths and activation status from an object of Voices. It also provides a function for getting the corresponding line for an x-y-coordinate for use with an object of InputDevs and TuioInput.
-
-\textbf{RationalPiano.Graphic.GraphicNoteLineArray} holds all GraphicVerticalLine objects drawn on the screen. It distributes them across the screen and manages their corresponding MIDI keys. Most line functions of GraphicControls are just wrappers around methods of this class.
-
-\textbf{RationalPiano.Graphic.GraphicVerticalLine} represents a vertical line that has a changeable width and activation state. It provides a method to get drawn on screen.
+\begin{itemize}
+	\item This package contains the annotations \textbf{FieldDescription}, \textbf{FieldDoubleMinMax}, \textbf{FieldFloatMinMax} and \textbf{FieldIntegerMinMax} which are used to comment the fields of rationalpiano.persistence.ConfigurationData in a way that it is possible to write the comments to the configuration file.
+\end{itemize}
 
 
-\subsection{RationalPiano.Input}
+\subsection{rationalpiano.voicemanagement}
 
-\textbf{RationalPiano.Input.InputDevs} manages input from mouse and keyboard. For multitouch it creates an object of TuioInput. For each new input it looks up the corresponding MIDI key in the GraphicControls object and then activates or deactivates the according voice with a call to the Voice object.
+\begin{itemize}
+	\item \textbf{rationalpiano.voicemanagement.Voices} manages active voices. It provides methods to add and remove voices which get called by an object of InputDevs. Voices also keeps an instance of Consonance with which it calculates the consonance for all active voices every frame. The resulting consonances get sent to the according GraphicVerticalLineTriangle2 objects fetched from the object of GraphicControls to set the line widths. The class implements the interface \textbf{rationalpiano.voicemanagement.IVoices} which itself extends the interface \textbf{rationalpiano.voicemanagement.ITickable}. IVoices provides access from InputDevs and ITickable allows to advance the single voices' time by the class RationalPiano.
 
-\textbf{RationalPiano.Input.TuioInput} manages TUIO input and processes it the same way as InputDevs.
+	\item Every active voice is an object of type \textbf{rationalpiano.voicemanagement.OneVoice} that allows to store various parameters like initial velocity or hold time individually for each active voice. 
+
+	\item \textbf{rationalpiano.voicemanagement.FadeTracking} makes it possible to use an ADSR\footnote{Attack Decay Sustain Release - More information on this can be found in~\cite{bib:RationalPianoDoc}} envelope for each voice. The Voices object uses an object of this class to calculate a current velocity for each active voice by passing the according OneVoice object.
+%%TODO \footnote{see Section~\ref{sec:ADSR}}
+\end{itemize}
+
+\subsection{rationalpiano.consonance}
+
+\begin{itemize}
+	\item \textbf{rationalpiano.consonance.Consonance} provides a method to calculate the consonance for all keys in range for a set of voice velocities. The Consonance class implements the interface \textbf{rationalpiano.consonance.IConsonance} which is used for access by the Voices object which initializes and keeps an instance of Consonance. For an explanation of the computation, see Section~\ref{sec:computation}.
+
+	\item \textbf{rationalpiano.consonance.Rational} represents a rational number and is used for the initialization of Consonance.
+\end{itemize}
 
 
-\subsection{RationalPiano.NoteOut}
+\subsection{rationalpiano.graphic}
 
-\textbf{RationalPiano.NoteOut.NoteOutput} sets up MIDI and SynOSCopy output according to the configuration. It provides functions to activate and deactivate a voice which get called from the Voices object. It forwards those calls to SendMIDI and/or SendOSC, depending on the configuration.
+\begin{itemize}
+	\item \textbf{rationalpiano.graphic.GraphicControls} manages the screen elements\footnote{background, line visualization and parameter control} and allows to draw them with a provided method. It holds an instance of GraphicNoteLineArray and PropertyControlP5. The class implements \textbf{rationalpiano.graphic.IGraphicControls} which itself extends the interface \textbf{rationalpiano.graphic.IDrawable}. IGraphicControls provides access to the contained GraphicNoteLineArray for an object of Voices, InputDevs, TuioInput and InputMidi.
 
-\textbf{RationalPiano.NoteOut.SendMidi} opens the configured MIDI device and forwards note messages to it.
+	\item \textbf{rationalpiano.graphic.GraphicNoteLineArray} holds all GraphicVerticalLine objects drawn on the screen. It distributes them across the screen and manages their corresponding MIDI keys. The class implements \textbf{rationalpiano.graphic.IGraphicVisualizationElementArray} which itself extends the interface \textbf{rationalpiano.graphic.IDrawable}. IGraphicVisualizationElementArray provides methods for querying contained line objects by objects of Voices, InputDevs and TuioInput.
 
-\textbf{RationalPiano.NoteOut.SendOsc} forwards note messages to the configured UDP port as a SynOSCopy message.
+	\item \textbf{rationalpiano.graphic.GraphicVerticalLineTriangle2} represents a vertical line that has a changeable volume\footnote{volume means visual ``intensity'' and results in a changed height, width and color} and activation state. It provides a method to get drawn on screen. The class implements \textbf{rationalpiano.graphic.IGraphicVisualizationElement} which itself extends the interface \textbf{rationalpiano.graphic.IDrawable}. IGraphicVisualizationElement provides methods to change the line's volume and activation state to be accessed by an object of the class Voices.
+	
+	\item \textbf{rationalpiano.graphic.PropertyControlP5} provides on-screen control elements which can be tweaked with the mouse and change configuration parameters at runtime\footnote{in the current version, there only is one dropdown menu implemented to change the MIDI input device}. A changed parameter will be propagated to the object of ConfigurationData and the configuration will be saved to the settings file. The class implements \textbf{rationalpiano.graphic.IPropertyControl} which itself extends the interface \textbf{rationalpiano.graphic.IDrawable}. IPropertyControl provides methods to add controllable objects\footnote{in the current version an object of InputMidi} and to query whether the mouse hovers a control element to avoid clicks on parameter controls to affect the line visualization.
+\end{itemize}
+
+
+\subsection{rationalpiano.input}
+
+\begin{itemize}
+	\item \textbf{rationalpiano.input.InputDevs} manages input from mouse and keyboard. For multitouch it creates an object of TuioInput. For MIDI input it creates an object of InputMidi. For each new input it looks up the corresponding MIDI key in the GraphicControls object and then activates or deactivates the according voice with a call to the Voice object. It also sends the input to the NoteOut object. The class implements the interfaces \textbf{rationalpiano.input.IKeyInput} and \textbf{rationalpiano.input.IMouseInput} which take mouse and keyboard input from the RationalPiano class.
+
+	\item \textbf{rationalpiano.input.TuioInput} manages TUIO input and processes it the same way as InputDevs.
+	
+	\item \textbf{rationalpiano.input.InputMidi} manages MIDI input and processes it the same way as InputDevs. Supported MIDI messages are \emph{note on}, \emph{note off} and \emph{damper pedal CC messages}.
+\end{itemize}
+
+
+\subsection{rationalpiano.noteout}
+
+\begin{itemize}
+	\item \textbf{rationalpiano.noteout.NoteOutput} sets up MIDI and SynOSCopy output according to the configuration. It provides functions to activate and deactivate a note/voice and send sustain (damper pedal) messages. It forwards those calls to SendMidi and/or SendOsc, depending on the configuration. The class implements the interfaces \textbf{rationalpiano.noteout.INoteOutput} which is used by InputDevs, TuioInput and InputMidi to control output note messages.
+
+	\item \textbf{rationalpiano.noteout.SendMidi} opens the configured MIDI device and forwards note messages to it.
+
+	\item \textbf{rationalpiano.noteout.SendOsc} forwards note messages to the configured UDP port as a SynOSCopy message.
+\end{itemize}
 
 
 \section{Library Dependencies}
 \label{sec:libdep}
 
-The application relies on Java, Processing and some additional libraries for MIDI, SynOSCopy and TUIO support.
+The application relies on Java, Processing and some additional libraries for control element, MIDI, SynOSCopy and TUIO support.
 
-The necessary libraries\footnote{except to the JDK} are included in the subdirectory \textit{lib}. All of them are open source. For the exact licenses, see the following sections.
+The necessary libraries\footnote{except to the JDK} are included in the subdirectory \emph{lib}. All of them are open source. For the exact licenses, see the following sections.
 
 
 \subsection{Java Development Kit}
 
-You will need a Java SE Development Kit \cite{bib:jdk} with version 6 or later. Version 5 probably would work too, but it was not tested.
+You will need a Java SE Development Kit~\cite{bib:jdk} with version 6 or later. Version 5 probably would work too, but it was not tested.
 
 
 \subsection{Processing}
 
-The library \textit{core.jar} included with Processing is needed \cite{bib:processing}. This application was tested with versions 1.0, 1.1 and 1.2.1, no changes were necessary to run it with the diverse versions. 
+The library \emph{core.jar} included with Processing is needed~\cite{bib:processing}. This application was tested with versions 1.0, 1.1 and 1.2.1, no changes were necessary to run it with the diverse versions. 
 
 \noindent
-The used export library is licensed under the GNU LGPL \cite{bib:lgpl}.
+The used export library is licensed under the GNU LGPL~\cite{bib:lgpl}.
+
+
+\subsection{controlP5}
+
+For control elements on-screen, like the dropdown to select the MIDI input device, the controlP5 library \emph{controlP5.jar} with version 0.5.4 is used~\cite{bib:controlP5}.
+
+\noindent
+The library is licenced under the GNU LGPL~\cite{bib:lgpl}.
 
 
 \subsection{TUIO}
 
-For multitouch input, the TUIO library \textit{libTUIO.jar} with version 1.4 is used \cite{bib:tuio}.
+For multitouch input, the TUIO library \emph{libTUIO.jar} with version 1.4 is used~\cite{bib:tuio}.
 
 \noindent
-The library is licenced under the GNU GPL version 2 \cite{bib:gpl2}.
+The library is licenced under the GNU GPL version 2~\cite{bib:gpl2}.
 
 
 \subsection{RWMidi}
 
-For MIDI in- and output, the library \textit{rwmidi.jar} with version 0.1c is used \cite{bib:rwmidi}.
+For MIDI in- and output, the library \emph{rwmidi.jar} with version 0.1c is used~\cite{bib:rwmidi}.
 
 \noindent
-It is licensed under the GNU LGPL \cite{bib:lgpl}.
+It is licensed under the GNU LGPL~\cite{bib:lgpl}.
 
 
 \subsection{SynOscP5}
 
-For SynOSCopy output, the libraries \textit{javaosc.jar} and \textit{synOscP5.jar} with versions from 12 September 2009 are used \cite{bib:synoscopy}.
+For SynOSCopy output, the libraries \emph{javaosc.jar} and \emph{synOscP5.jar} with versions from 12 September 2009 are used~\cite{bib:synoscopy}.
 
 \noindent
-The library \textit{synOscP5.jar} is licensed under the Artistic License \cite{bib:artistic}.
+The library \emph{synOscP5.jar} is licensed under the Artistic License~\cite{bib:artistic}.
 
 \noindent
-The exact copyright notice and license text for the library \textit{javaosc.jar} is stated in file \textit{lib/javaosc\_license.txt}.
+The exact copyright notice and license text for the library \emph{javaosc.jar} is stated in file \emph{lib/javaosc\_license.txt}.
 
 
 \chapter{Prospects and Future Development Ideas}
 \label{chap:future}
+
+Some of the listed bugs or ideas might be outdated. The current state can be found in the issue tracker at \url{https://github.com/fabb/Rational-Piano/issues}. 
 
 
 \section{Bugs}
@@ -881,9 +959,7 @@ There are some lines marked in the sourcecode with the keywords \textbf{TODO}, \
 
 \begin{itemize}
 
-	\item Make the consonance display of the lines \textbf{more clear} - the width is not that good recognizeable for smaller ones, e.g. show the consonance additionally with a triangle with another color and a variable height.
-
-	\item Provide a \textbf{Menu} to adjust parameters online.
+	\item Provide a \textbf{Menu} to adjust parameters online. Done for MIDI input for now.
 	
 	\item Calculate \textbf{Overall Consonance} of the playing and display it e.g. by a varying background color.
 
@@ -898,12 +974,7 @@ There are some lines marked in the sourcecode with the keywords \textbf{TODO}, \
 
 	\item Make \textbf{Keyboard-Input localized} and not just for the German Layout.
 
-	\item It would also be thinkable to let away the multitouch input and directly \textbf{Input from a MIDI Keyboard}. \\
-	The visual output could be differed too, so that with a beamer the consonances could be displayed next to the input keys. That would not be possible with a continuous scale of course (except with a Continuum Fingerboard \cite{bib:continuum}).
-
-	\item Allow \textbf{MIDI Input} which just impacts consonance calculation, but does not get routed to the output.
-
-	\item An expansion of the previous idea: A \textbf{"Tutor" Mode} where musical pieces or harmony series get played back that also do not get routed to the output.
+	\item A \textbf{``Tutor'' Mode} where musical pieces or harmony series get played back that also do not get routed to the note output.
 
 	\item \textbf{Polyphonic Pitch-Shift} where a moving finger changes the frequency of the corresponding note. The frequencies where the note snaps could either be keys of a fixed scale or follow different algorithms (see next idea). \\
 	\textbf{Problems:} It is hard for the framework to do the tracking of crossing fingers, errors are possible. MIDI messages would need pitch bend which only works with a channel hack.
@@ -925,7 +996,7 @@ There are some lines marked in the sourcecode with the keywords \textbf{TODO}, \
 	\textbf{Benefit:} The attack-/decay-/release-\textbf{rate} and not the time is the same for all voices. \\
 	\textbf{Problem:} The voices then are no more stateless as they must know in which phase they are, there is no possibility to determine the phase just from the frame-age of the voice anymore.
 
-	\item Take account for the \textbf{Spectrum of the Sound Generator} for calculating the consonance\footnote{William Sethares developed such an approach with his "Adaptive Tuning"}. This could either be achieved with static samples of the synthesizer or with dynamically recorded ones.
+	\item Take account for the \textbf{Spectrum of the Sound Generator} for calculating the consonance\footnote{William Sethares developed such an approach with his ``Adaptive Tuning''}. This could either be achieved with static samples of the synthesizer or with dynamically recorded ones.
 
 	\item An expansion of the previous idea would be to record the environment and provide the possibility to play \textbf{consonant to the ambient}.
 
@@ -939,7 +1010,7 @@ There are some lines marked in the sourcecode with the keywords \textbf{TODO}, \
 	\item Use different (fixed) \textbf{Scales} than 12TET. \\
 	\textbf{Difficulty:} MIDI Tuning messages or MIDI Pitch Bend messages would be necessary.
 
-	\item Provide a \textbf{Continuous Scale}\footnote{A bit like the Continuum Fingerboard \cite{bib:continuum}} as input. Pressed x-values "snap" to a next consonant ratio. The minimum consonance could be set in real time by a parameter (controlled e.g. by a foot pedal). \\
+	\item Provide a \textbf{Continuous Scale}\footnote{A bit like the Continuum Fingerboard~\cite{bib:continuum}} as input. Pressed x-values ``snap'' to a next consonant ratio. The minimum consonance could be set in real time by a parameter (controlled e.g. by a foot pedal). \\
 	\textbf{Difficulty:} MIDI messages would need pitch bend which only works with a channel hack.
 
 \end{itemize}
@@ -961,6 +1032,11 @@ There are some lines marked in the sourcecode with the keywords \textbf{TODO}, \
 \chapter{History of Changes}
 \label{chap:history}
 
+\indent
+\textbf{2011-02-04}
+
+Renewed the documentation to reflect additions of MIDI input and some other things.
+
 \textbf{2010-07-30}
 
 First public release.
@@ -968,7 +1044,7 @@ First public release.
 
 \clearpage
 \phantomsection
-\addcontentsline{toc}{chapter}{Bibliography}
+\addcontentsline{toc}{chapter}{References}
 
 \bibliographystyle{plain}
 
@@ -1075,7 +1151,11 @@ First public release.
 \bibitem{bib:processing}
   \emph{Processing Download}.
   \url{http://processing.org/download/}.
-  
+
+\bibitem{bib:controlP5}
+  \emph{controlP5}.
+  \url{http://www.sojamo.de/libraries/controlP5/}.
+
 \bibitem{bib:rwmidi}
   \emph{RWMidi}.
   \url{http://ruinwesen.com/files}, \url{http://ruinwesen.com/support-files/rwmidi-0.1c.zip}.
@@ -1087,7 +1167,7 @@ First public release.
   
 \bibitem{bib:synoscopyNamespace}
   \emph{SynOSCopy Namespace Proposal}.
-  \url{http://synosc.wetpaint.com/}.
+  \url{http://github.com/fabb/SynOSCopy/wiki}.
 
 \bibitem{bib:synoscopy}
   \emph{SynOSCopy}.
@@ -1098,7 +1178,7 @@ First public release.
   \url{http://51858360.de.strato-hosting.eu/synoscp5/keyboard.html} and a direct link to the PureData patch: \url{http://51858360.de.strato-hosting.eu/synoscp5/examples/keyboard/keyboard.pd}.
   
 \bibitem{bib:osl}
-  \emph{Open Software License ("OSL") v. 3.0}.
+  \emph{Open Software License (``OSL'') v. 3.0}.
   \url{http://www.opensource.org/licenses/osl-3.0.php}.
 
 \bibitem{bib:lgpl}
