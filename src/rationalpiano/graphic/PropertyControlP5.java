@@ -48,7 +48,7 @@ public class PropertyControlP5 implements IPropertyControl, ControlListener {
 	 */
 	private void setup() {
 		int x_left = 0;
-		int y_top = 0;
+		int y_top = 22; //OSX menu bar is most commonly 22 pixels in height and even shows up in Processing's full screen mode 
 		int select_height = 15;
 		int list_height = 300;
 		int width = 200;
